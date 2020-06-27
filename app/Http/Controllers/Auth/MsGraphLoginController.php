@@ -82,7 +82,7 @@ class MsGraphLoginController extends Controller
         $userData = $this->userFindorCreate($userGraph);
 
         Auth::login($userData, true);
-        
+
         return redirect('/');
       }
       catch (League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
@@ -108,7 +108,7 @@ class MsGraphLoginController extends Controller
     // $user->email= $username."@ksau-hs.edu.sa";
     // $user->password= Hash::make('the-password-of-choice');
     $user->save();
-    $user->assignRole('enduser');
+  //  $user->assignRole('enduser');
     }
     return $user;
 }
@@ -126,7 +126,7 @@ class MsGraphLoginController extends Controller
         // Get the access token from the cache
         $tokenCache = new TokenCache();
         $accessToken = $tokenCache->getAccessToken();
-    
+
         // Create a Graph client
         $graph = new Graph();
         $graph->setAccessToken($accessToken);
@@ -136,10 +136,10 @@ class MsGraphLoginController extends Controller
           '$filter' => "startswith(displayName,'". $userParams ."')  or startswith(mail,'". $userParams ."')",
           // '$orderby' => 'createdDateTime DESC'
         );
-    
+
         // Append query parameters to the '/me/events' url
         $getEventsUrl = '/users?'.http_build_query($queryParams);
-    
+
         $events = $graph->createRequest('GET', $getEventsUrl)
           ->setReturnType(Model\Event::class)
           ->execute();

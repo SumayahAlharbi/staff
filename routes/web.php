@@ -18,5 +18,8 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Route::get('/signin', 'Auth\MsGraphLoginController@signin')->name('mslogin');
+Route::get('/callback', 'Auth\MsGraphLoginController@callback');
+Route::get('/signout', 'Auth\MsGraphLoginController@signout');
 
 Route::get('/home', 'HomeController@index')->name('home');

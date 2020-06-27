@@ -23,3 +23,4 @@ Route::get('/callback', 'Auth\MsGraphLoginController@callback');
 Route::get('/signout', 'Auth\MsGraphLoginController@signout');
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::post('AttendanceSheet', 'AttendanceSheetController@store')->name('attendancesheet.store');

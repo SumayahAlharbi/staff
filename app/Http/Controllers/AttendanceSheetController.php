@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AttendanceSheet;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\User;
 use Auth;
 
@@ -41,10 +42,19 @@ class AttendanceSheetController extends Controller
     {
         //
 
+        $request->validate([
+          'coords' => 'required',
+          'Action' => [
+          'required',
+          Rule::in(['Check In', 'Check Out']),
+      ],
+    ]);
+
         $AttendanceSheet = new \App\AttendanceSheet;
 
         $AttendanceSheet->user_id = Auth::user()->id;
         $AttendanceSheet->action = $request->Action;
+        $attendancesheet->coords = $request->coords;
 
         $AttendanceSheet->save();
         return redirect('home')->with('success', 'Attendance has been taken');

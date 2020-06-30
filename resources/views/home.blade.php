@@ -11,6 +11,15 @@
                 <div class="card-header">Attendance</div>
 
                 <div class="card-body">
+                    @if ($errors->any())
+                      <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                              <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                      </div><br />
+                    @endif
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -36,29 +45,29 @@
                       <p>
                         Are we here?<br/>
                         <span id="message"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>
-          
+
                       </p>
                       <p>
                         <!-- Tutorial -->
-          
+
                         <div id="highlight" class="alert alert-danger">
                           <div id="error"></div>
                           <div id="tutorial">
                             <button type="button" class="btn btn-link" data-toggle="modal" data-target="#tutorialModal">
                               To Enable location check here
                             </button>
-          
+
                             <div class="modal fade" id="tutorialModal" tabindex="-1" role="dialog" aria-labelledby="tutorial" data-dismiss="modal" aria-label="Close" aria-hidden="true">
                               <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
-          
+
                                   <div class="modal-header">
                                     <h5 class="modal-title" id="tutorialModal">Enable Geolocation</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                       <span aria-hidden="true">&times;</span>
                                     </button>
                                   </div>
-          
+
                                   <div class="modal-body">
                                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                                       <li class="nav-item active">
@@ -68,7 +77,7 @@
                                         <a class="nav-link" id="androied-tab" data-toggle="tab" href="#android" role="tab" aria-controls="profile" aria-selected="false">Android</a>
                                       </li>
                                     </ul>
-          
+
                                     <div class="tab-content">
                                       <div id="iphone" class="tab-pane fade show active">
                                         <br>
@@ -93,9 +102,9 @@
                             <!-- /Tutorial -->
                           </div>
                         </div>
-          
+
                         <div id="success" class="alert alert-success"></div>
-          
+
                       </p>
                       <p>
                         <div id="attendBtn">
@@ -103,6 +112,7 @@
                           @csrf
                         <button type="submit" name="Action" value="Check In" class="btn btn-primary btn-lg btn-block p-5">Check In</button>
                         <button type="submit" name="Action" value="Check Out" class="btn btn-secondary btn-lg btn-block p-5">Check Out</button>
+                        <div id="coords"></div>
                       </form>
                     </div>
                       </p>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AttendanceSheet;
 use Illuminate\Http\Request;
 use App\User;
 use Auth;
@@ -15,7 +16,9 @@ class AttendanceSheetController extends Controller
      */
     public function index()
     {
-        //
+      $attendancesheets = AttendanceSheet::latest()->simplePaginate(15);
+
+      return view('attendance.index', compact('attendancesheets'));
     }
 
     /**

@@ -12,8 +12,8 @@ class AttendanceSheet extends Model
     /**
      * Get the user that owns the Attendance.
      */
-    public function user()
-    {
-        return $this->belongsTo('App\User')->withTimestamps();
-    }
+     public function user()
+     {
+     return $this->belongsTo('App\User');
+     }
 }

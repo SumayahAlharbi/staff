@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', 'HomeController@index')->name('home');
 
 Auth::routes();
 Route::get('/signin', 'Auth\MsGraphLoginController@signin')->name('mslogin');

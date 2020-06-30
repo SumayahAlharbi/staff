@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\AttendanceSheet;
+use Carbon\Carbon;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -11,10 +14,10 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
     /**
      * Show the application dashboard.
@@ -23,6 +26,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $fromDate = Carbon::parse(Carbon::now()->toFormattedDateString())->startOfWeek(Carbon::SUNDAY);
+        $toDate = Carbon::parse(Carbon::now()->toFormattedDateString())->endOfWeek();
+
+        // $user = auth()->user();
+
+        $user = Auth::user();
+        $UserAttendance = AttendanceSheet::where('user_id', '=', $user->id)
+        ->whereBetween('created_at', [$fromDate, $toDate])
+        ->get();
+        return view('home',compact('user', 'UserAttendance'));
     }
 }

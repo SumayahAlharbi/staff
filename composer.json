@@ -16,7 +16,8 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "league/oauth2-client": "^2.4",
-        "microsoft/microsoft-graph": "^1.13"
+        "microsoft/microsoft-graph": "^1.13",
+        "nesbot/carbon": "^2.35"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

@@ -111,6 +111,23 @@
                         <div id="mapholder"></div>
                       </p>
                     </div>
+                    <p>Your latest attendance:</p>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <td>Attendance Type</td>
+                <td>Timestamp</td>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($UserAttendance as $Attendance)
+              <tr>
+                <td>{{$Attendance->action}}</td>
+                <td>{{$Attendance['created_at']}} ({{$Attendance['created_at']->diffForHumans()}})</td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
                 </div>
             </div>
         </div>

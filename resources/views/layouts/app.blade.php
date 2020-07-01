@@ -37,12 +37,15 @@
                                   <a class="nav-link" href="{{ route('attendance') }}">Attendance Sheet</a>
                                   </li>
 
-                                  {{-- <li class="nav-item">
-                                              <a class="nav-link" href="{{ route('roles') }}">Roles</a>
+                                  <li class="nav-item">
+                                              <a class="nav-link" href="{{ route('roles.index') }}">Roles</a>
                                               </li>
                                     <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('permissions') }}">Permissions</a>
-                                                          </li> --}}
+                                    <a class="nav-link" href="{{ route('permissions.index') }}">Permissions</a>
+                                                          </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ route('users.index') }}">Users</a>
+                                                                                </li>
 
                     </ul>
 

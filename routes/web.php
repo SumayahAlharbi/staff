@@ -29,6 +29,9 @@ Route::get('/attendance', 'AttendanceSheetController@index')->name('attendance')
 Route::resource('permissions', 'PermissionController');
 Route::resource('roles', 'RoleController');
 
+//Users route
+Route::resource('users', 'UserController');
+Route::get('/userSearch', 'UserController@userSearch')->name('user.userSearch');
 Route::post('users/addRole', '\App\Http\Controllers\UserController@addRole');
 Route::get('users/removeRole/{role}/{user_id}', '\App\Http\Controllers\UserController@revokeRole');
 

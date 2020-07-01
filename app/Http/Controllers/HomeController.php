@@ -27,7 +27,7 @@ class HomeController extends Controller
     public function index()
     {
         $fromDate = Carbon::parse(Carbon::now()->toFormattedDateString())->startOfWeek(Carbon::SUNDAY);
-        $toDate = Carbon::parse(Carbon::now()->toFormattedDateString())->endOfWeek();
+        $toDate = Carbon::parse(Carbon::now()->toFormattedDateString())->endOfWeek(Carbon::THURSDAY);
 
         // $user = auth()->user();
 

@@ -54,7 +54,7 @@ class AttendanceSheetController extends Controller
 
         $AttendanceSheet->user_id = Auth::user()->id;
         $AttendanceSheet->action = $request->Action;
-        $attendancesheet->coords = $request->coords;
+        $AttendanceSheet->coords = $request->coords;
 
         $AttendanceSheet->save();
         return redirect('home')->with('success', 'Attendance has been taken');

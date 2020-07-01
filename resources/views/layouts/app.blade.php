@@ -36,6 +36,14 @@
                       <li class="nav-item">
                                   <a class="nav-link" href="{{ route('attendance') }}">Attendance Sheet</a>
                                   </li>
+
+                                  {{-- <li class="nav-item">
+                                              <a class="nav-link" href="{{ route('roles') }}">Roles</a>
+                                              </li>
+                                    <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('permissions') }}">Permissions</a>
+                                                          </li> --}}
+
                     </ul>
 
                     <!-- Right Side Of Navbar -->

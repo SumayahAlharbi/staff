@@ -33,20 +33,22 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                      @can('view attendance sheet')
                       <li class="nav-item">
                                   <a class="nav-link" href="{{ route('attendance') }}">Attendance Sheet</a>
                                   </li>
-
+                      @endcan
+                            @role('admin')
                                   <li class="nav-item">
-                                              <a class="nav-link" href="{{ route('roles.index') }}">Roles</a>
-                                              </li>
+                              <a class="nav-link" href="{{ route('roles.index') }}">Roles</a>
+                                  </li>
                                     <li class="nav-item">
                                     <a class="nav-link" href="{{ route('permissions.index') }}">Permissions</a>
                                                           </li>
                         <li class="nav-item">
                         <a class="nav-link" href="{{ route('users.index') }}">Users</a>
                                                                                 </li>
-
+                            @endrole
                     </ul>
 
                     <!-- Right Side Of Navbar -->

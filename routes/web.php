@@ -13,18 +13,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'HomeController@index')->name('home');
 
+Auth::routes(['register' => false]);
 Auth::routes();
 Route::get('/signin', 'Auth\MsGraphLoginController@signin')->name('mslogin');
 Route::get('/callback', 'Auth\MsGraphLoginController@callback');
 Route::get('/signout', 'Auth\MsGraphLoginController@signout');
 
+Route::group(['middleware' => 'auth'], function () {
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::post('AttendanceSheet', 'AttendanceSheetController@store')->name('attendancesheet.store');
-Route::get('/attendance', 'AttendanceSheetController@index')->name('attendance');
+Route::get('/attendance', 'AttendanceSheetController@index')->name('attendance')->middleware('permission:view attendance sheet');
+
+Route::group(['middleware' => ['role:admin']], function () {
+
 
 Route::resource('permissions', 'PermissionController');
 Route::resource('roles', 'RoleController');
@@ -43,3 +48,6 @@ Route::get('users/removePermission/{permission}/{user_id}', '\App\Http\Controlle
 
 Route::post('roles/addPermission', '\App\Http\Controllers\RoleController@addPermission');
 Route::get('roles/removePermission/{permission}/{role_id}', '\App\Http\Controllers\RoleController@revokePermission');
+
+});
+});

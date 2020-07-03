@@ -63,8 +63,7 @@
                <div class="form-group">
                @foreach($userRoles as $role)
 
-               {{-- <a class='btn btn-primary' href='{{url('users/removeRole')}}/{{str_slug($role->name,'-')}}/{{$user->id}}'><i class="fas fa-trash-alt"></i> {{$role->name}}</a> --}}
-               <a class='btn btn-primary' ><i class="fas fa-trash-alt"></i> {{$role->name}}</a>
+               <a class='btn btn-primary' href='{{url('users/removeRole')}}/{{($role->name)}}/{{$user->id}}'><i class="fas fa-trash-alt"></i> {{$role->name}}</a>
 
 
                @endforeach
@@ -109,8 +108,8 @@
                          <div class="form-group">
                          @foreach($userPermissions as $permission)
 
-                         {{-- <a class='btn btn-primary' href='{{url('users/removePermission')}}/{{str_slug($permission->name,'-')}}/{{$user->id}}'><i class="fas fa-trash-alt"></i> {{$permission->name}}</a> --}}
-                         <a class='btn btn-primary'><i class="fas fa-trash-alt"></i> {{$permission->name}}</a>
+                         <a class='btn btn-primary' href='{{url('users/removePermission')}}/{{($permission->name)}}/{{$user->id}}'><i class="fas fa-trash-alt"></i> {{$permission->name}}</a>
+                         {{-- <a class='btn btn-primary'><i class="fas fa-trash-alt"></i> {{$permission->name}}</a> --}}
 
                          @endforeach
                        </div>

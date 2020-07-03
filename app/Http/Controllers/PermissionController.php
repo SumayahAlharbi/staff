@@ -116,7 +116,7 @@ class PermissionController extends Controller
     {
         $permission = Permission::findorfail($permission_id);
 
-        $permission->revokePermissionTo(str_slug($permission, ' '));
+        $permission->revokePermissionTo($permission);
 
         return redirect('permissions/edit/'.$permission_id);
     }

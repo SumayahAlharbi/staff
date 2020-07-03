@@ -51,7 +51,7 @@
 							@foreach($RolePermissions as $permission)
 							<tr>
 								<td>{{$permission->name}}</td>
-								{{-- <td><a href="{{url('roles/removePermission')}}/{{str_slug($permission->name,'-')}}/{{$role->id}}" class = "btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a></td> --}}
+								<td><a href="{{url('roles/removePermission')}}/{{($permission->name)}}/{{$role->id}}" class = "btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a></td>
 							</tr>
 							@endforeach
 						</tbody>

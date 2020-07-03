@@ -98,14 +98,6 @@ class UserController extends Controller
          $permissions = Permission::all()->pluck('name');
          $userPermissions = $user->permissions;
          return view('users.edit', compact('user', 'roles', 'userRoles', 'permissions', 'userPermissions'));
-       // }elseif ($user->hasRole('Admin')) {
-         // $user = \App\User::whereNotIn('id', [1, 3])->findOrfail($id);
-         // $roles = Role::all()->pluck('name');
-         // $userRoles = $user->roles;
-    //     return view('users.edit', compact('user', 'roles', 'userRoles'));
-    // }else{
-    //   return abort(401, 'Unauthorized action.');
-    // }
 
      }
 
@@ -180,7 +172,7 @@ class UserController extends Controller
     {
         $users = \App\User::findorfail($user_id);
 
-        $users->removeRole(str_slug($role, ' '));
+        $users->removeRole($role);
 
         return back();
     }
@@ -214,7 +206,7 @@ public function revokePermission($permission, $user_id)
 {
    $users = \App\User::findorfail($user_id);
 
-   $users->revokePermissionTo(str_slug($permission, ' '));
+   $users->revokePermissionTo($permission);
 
    return back();
 }

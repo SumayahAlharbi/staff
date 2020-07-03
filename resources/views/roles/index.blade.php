@@ -40,7 +40,11 @@
 					<a href="{{ route('roles.edit',$role->id)}}" class = "btn btn-primary">edit</a>
 				</td>
         <td>
-          <a href="{{url('/roles/delete')}}/{{$role->id}}" class = "btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+        <form onsubmit="return confirm('Do you really want to delete?');" action="roles/{{$role->id}}" method="post">
+          @csrf
+          @method('DELETE')
+            <button class="btn btn-danger" title="Delete" type="submit"><i class="fa fa-trash-alt"></i></button>
+        </form>
         </td>
 			</tr>
 			@endforeach

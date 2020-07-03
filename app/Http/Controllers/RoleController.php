@@ -120,7 +120,7 @@ class RoleController extends Controller
     {
         $role = Role::findorfail($role_id);
 
-        $role->revokePermissionTo(str_slug($permission, ' '));
+        $role->revokePermissionTo($permission);
 
         return back();
     }

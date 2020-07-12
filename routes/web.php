@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 
 
 Auth::routes(['register' => false]);
-Auth::routes();
 Route::get('/signin', 'Auth\MsGraphLoginController@signin')->name('mslogin');
 Route::get('/callback', 'Auth\MsGraphLoginController@callback');
 Route::get('/signout', 'Auth\MsGraphLoginController@signout');

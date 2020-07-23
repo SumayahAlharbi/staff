@@ -27,16 +27,14 @@ class ExportController extends Controller
         'Sort By' => $sortBy
     ];
 
-    $queryBuilder = AttendanceSheet::select('id','action','coords','created_at','updated_at')
+    $queryBuilder = AttendanceSheet::select('id','action','created_at')
     ->whereBetween('created_at', [$fromDate, $toDate])
     ->orderBy($sortBy);
 
     $columns = [
       'ID' => 'id',
       'Action' => 'action',
-      'Coords' => 'coords',
       'Created at' => 'created_at',
-      'Updated at' => 'updated_at'
     ];
 
     CSVReport::of($title, $meta, $queryBuilder, $columns)

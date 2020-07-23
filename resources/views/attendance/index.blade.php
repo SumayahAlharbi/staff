@@ -17,6 +17,10 @@
     </div><br />
   @endif
 
+  @can('export')
+  <div class="float-left"> <a class="btn btn-primary" href="{{ route('attendancesheet.export') }}" role="button">Export</a> </div>
+  @endcan
+
   <table class="table table-striped">
     <thead>
         <tr>

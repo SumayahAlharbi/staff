@@ -13,25 +13,28 @@ use Carbon\Carbon;
 class ExportController extends Controller
 {
 
-  public function attendancesheet()
+  public function attendancesheet(Request $request)
   {
+    $fromDate = Carbon::parse($request->input('from_date'))->startOfDay();
+    $toDate = Carbon::parse($request->input('to_date'))->endOfDay();
+    $sortBy = $request->input('sort_by');
 
     $filename = 'attendance_sheet_'.Carbon::now()->format('dmy_his');
     $title = 'Staff Attendance Sheet';
 
     $meta = [
-        'Sort By' => 'created_at'
+        'Attendance Sheet from' => $fromDate . ' To ' . $toDate,
+        'Sort By' => $sortBy
     ];
 
-    $queryBuilder = AttendanceSheet::select('id','action','coords','created_at','updated_at')
-    ->orderBy('created_at');
+    $queryBuilder = AttendanceSheet::select('id','action','created_at')
+    ->whereBetween('created_at', [$fromDate, $toDate])
+    ->orderBy($sortBy);
 
-    $columns = [ // Set Column to be displayed
+    $columns = [
       'ID' => 'id',
       'Action' => 'action',
-      'Coords' => 'coords',
       'Created at' => 'created_at',
-      'Updated at' => 'updated_at'
     ];
 
     CSVReport::of($title, $meta, $queryBuilder, $columns)

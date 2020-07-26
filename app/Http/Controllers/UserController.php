@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Group;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -92,12 +93,13 @@ class UserController extends Controller
       // $user = Auth::user();
        // if ($user->hasRole('SuperAdmin')) {
          $user = \App\User::findOrfail($id);
-
+         $userGroups = $user->group;
+         $groups = \App\Group::all();
          $roles = Role::all()->pluck('name');
          $userRoles = $user->roles;
          $permissions = Permission::all()->pluck('name');
          $userPermissions = $user->permissions;
-         return view('users.edit', compact('user', 'roles', 'userRoles', 'permissions', 'userPermissions'));
+         return view('users.edit', compact('user', 'roles', 'userRoles', 'permissions', 'userPermissions','groups','userGroups'));
 
      }
 
@@ -142,7 +144,25 @@ class UserController extends Controller
 
     }
 
+    
+    //add and remove group to user.
 
+    public function addUserGroup(Request $request)
+    {
+      $user = User::findorfail($request->user_id);
+      $user->group()->syncWithoutDetaching($request->group_id);
+      return back();
+    }
+
+    public function removeUserGroup($group_id, $user_id)
+    {
+      $user = User::findorfail($user_id);
+
+      $user->group()->detach($group_id);
+
+      return back();
+
+    }
 
      /**
      * Assign Role to user.

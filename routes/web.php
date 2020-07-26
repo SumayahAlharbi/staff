@@ -44,6 +44,9 @@ Route::get('users/removeRole/{role}/{user_id}', '\App\Http\Controllers\UserContr
 //Groups Routes
 Route::resource('group', 'GroupController');
 
+    // assign and remove user from a group
+    Route::post('users/addUserGroup', 'UserController@addUserGroup');
+    Route::get('users/removeUserGroup/{user_id}/{group_id}', '\App\Http\Controllers\UserController@removeUserGroup');
 
     // Add Permission to a user
 Route::post('users/addPermission', '\App\Http\Controllers\UserController@addPermission');

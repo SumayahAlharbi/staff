@@ -114,8 +114,35 @@
                          @endforeach
                        </div>
 
+   <!-- add and remove groups to user -->
+      <div class="form-group">
+        <h5>Add user to groups</h5>
+      </div>
 
+      <form action="{{url('users/addUserGroup')}}" method = "post">
 
+        @csrf
+        <input type="hidden" name = "user_id" value = "{{$user->id}}">
+        <div class = 'row'>
+          <div class="form-group col-md-6">
+            <select name="group_id" id="" class = "form-control">
+              @foreach($groups as $group)
+              <option value="{{$group->id}}">{{$group->group_name}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <button class='btn btn-primary'>Assign</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="form-group">
+        @foreach($userGroups as $userGroup)
+        <a class='btn btn-primary' href='{{url('users/removeUserGroup')}}/{{$userGroup->id}}/{{$user->id}}' data-activates=''><i class="fas fa-trash-alt"></i> {{$userGroup->group_name}}</a>
+        @endforeach
+      </div>
+   <!-- end add and remove groups to user -->
 
   			<form action="{{ route('users.update', $user->id) }}" method = "post">
           @method('PATCH')

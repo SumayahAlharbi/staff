@@ -22,11 +22,11 @@ class AttendanceSheet extends Model
      return $this->belongsTo('App\Group');
      }
 
-     /*
+
      public static function boot()
      {
        parent::boot();
        static::addGlobalScope(new Scopes\AttendanceScope);
      }
-     */
+
 }

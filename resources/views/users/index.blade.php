@@ -42,6 +42,7 @@
         <tr>
           <td>User</td>
           <td>Email</td>
+          <td>Group</td>
           <td>Roles</td>
           <td>Permissions</td>
         </tr>
@@ -56,6 +57,18 @@
 
     <td class="muted-text">
       {{$user->email}}
+    </td>
+
+    <td>
+        @if(!empty($user->group->first()))
+        @foreach($user->group as $userGroup)
+          {{$userGroup->group_name}} <br>
+        @endforeach
+          @else
+
+            No Groups
+
+          @endif
     </td>
 
     <td>

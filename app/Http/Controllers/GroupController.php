@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\AttendanceSheet;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\User;
 use App\Group;
-use Auth;
+use Illuminate\Http\Request;
 
-class AttendanceSheetController extends Controller
+class GroupController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,9 +14,9 @@ class AttendanceSheetController extends Controller
      */
     public function index()
     {
-      $attendancesheets = AttendanceSheet::latest()->simplePaginate(15);
-
-      return view('attendance.index', compact('attendancesheets'));
+        //
+        $groups = group::all();
+        return view('group.index', compact('groups'));
     }
 
     /**
@@ -31,6 +27,7 @@ class AttendanceSheetController extends Controller
     public function create()
     {
         //
+          return view('group.create');
     }
 
     /**
@@ -42,33 +39,26 @@ class AttendanceSheetController extends Controller
     public function store(Request $request)
     {
         //
-
         $request->validate([
-          'coords' => 'required',
-          'Action' => [
-          'required',
-          Rule::in(['Check In', 'Check Out']),
-      ],
-    ]);
+          'group_name'=>'required',
+          'group_description'=> 'required',
+        ]);
+        $group = new group;
 
-        $AttendanceSheet = new \App\AttendanceSheet;
+        $group->group_name = $request->group_name;
+        $group->group_description = $request->group_description;
 
-        $AttendanceSheet->user_id = Auth::user()->id;
-        $AttendanceSheet->group_id = $request->group_id;
-        $AttendanceSheet->action = $request->Action;
-        $AttendanceSheet->coords = $request->coords;
-
-        $AttendanceSheet->save();
-        return redirect('home')->with('success', 'Attendance has been taken');
+        $group->save();
+        return redirect('/group')->with('success', 'Group has been added');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Group $group)
     {
         //
     }
@@ -76,34 +66,44 @@ class AttendanceSheetController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         //
+        $group = group::find($id);
+        return view('group.edit', compact('group'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         //
+        $group = group::find($id);
+        $group->group_name = $request->group_name;
+        $group->group_description = $request->group_description;
+        $group->save();
+
+        return redirect('/group')->with('success', 'group has been updated');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
+     public function destroy($id)
+     {
+       $group = Group::findOrfail($id);
+       $group->delete();
+       return redirect('/group')->with('success', 'Group has been deleted');
+     }
 }

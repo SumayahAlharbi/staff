@@ -18,6 +18,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
       // create permissions
       Permission::firstOrCreate(['name' => 'view attendance sheet']);
+      Permission::firstOrCreate(['name' => 'export']);
 
       // create roles and assign created permissions
 
@@ -26,7 +27,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
       // or may be done by chaining
       $role = Role::firstOrCreate(['name' => 'manager'])
-          ->givePermissionTo(['view attendance sheet']);
+          ->givePermissionTo(['view attendance sheet'])
+          ->givePermissionTo(['export']);
 
     }
 }

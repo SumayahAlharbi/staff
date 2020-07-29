@@ -6,11 +6,43 @@ use App\AttendanceSheet;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\User;
-use App\Group;
 use Auth;
+use CSVReport;
+use Carbon\Carbon;
 
-class AttendanceSheetController extends Controller
+class ExportController extends Controller
 {
+
+  public function attendancesheet(Request $request)
+  {
+    $fromDate = Carbon::parse($request->input('from_date'))->startOfDay();
+    $toDate = Carbon::parse($request->input('to_date'))->endOfDay();
+    $sortBy = $request->input('sort_by');
+
+    $filename = 'attendance_sheet_'.Carbon::now()->format('dmy_his');
+    $title = 'Staff Attendance Sheet';
+
+    $meta = [
+        'Attendance Sheet from' => $fromDate . ' To ' . $toDate,
+        'Sort By' => $sortBy
+    ];
+
+    $queryBuilder = AttendanceSheet::select('id','action','created_at')
+    ->whereBetween('created_at', [$fromDate, $toDate])
+    ->orderBy($sortBy);
+
+    $columns = [
+      'ID' => 'id',
+      'Action' => 'action',
+      'Created at' => 'created_at',
+    ];
+
+    CSVReport::of($title, $meta, $queryBuilder, $columns)
+    ->withoutManipulation()
+    ->showNumColumn(false)
+    ->download($filename);
+  }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,9 +50,7 @@ class AttendanceSheetController extends Controller
      */
     public function index()
     {
-      $attendancesheets = AttendanceSheet::latest()->simplePaginate(15);
-
-      return view('attendance.index', compact('attendancesheets'));
+        //
     }
 
     /**
@@ -42,24 +72,6 @@ class AttendanceSheetController extends Controller
     public function store(Request $request)
     {
         //
-
-        $request->validate([
-          'coords' => 'required',
-          'Action' => [
-          'required',
-          Rule::in(['Check In', 'Check Out']),
-      ],
-    ]);
-
-        $AttendanceSheet = new \App\AttendanceSheet;
-
-        $AttendanceSheet->user_id = Auth::user()->id;
-        $AttendanceSheet->group_id = $request->group_id;
-        $AttendanceSheet->action = $request->Action;
-        $AttendanceSheet->coords = $request->coords;
-
-        $AttendanceSheet->save();
-        return redirect('home')->with('success', 'Attendance has been taken');
     }
 
     /**

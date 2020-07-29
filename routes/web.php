@@ -26,6 +26,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('AttendanceSheet', 'AttendanceSheetController@store')->name('attendancesheet.store');
 Route::get('/attendance', 'AttendanceSheetController@index')->name('attendance')->middleware('permission:view attendance sheet');
+// Export Attendance Sheet
+Route::post('export/', 'ExportController@attendancesheet')->name('attendancesheet.export')->middleware('permission:export');
 
 Route::group(['middleware' => ['role:admin']], function () {
 
@@ -38,6 +40,13 @@ Route::resource('users', 'UserController');
 Route::get('/userSearch', 'UserController@userSearch')->name('user.userSearch');
 Route::post('users/addRole', '\App\Http\Controllers\UserController@addRole');
 Route::get('users/removeRole/{role}/{user_id}', '\App\Http\Controllers\UserController@revokeRole');
+
+//Groups Routes
+Route::resource('group', 'GroupController');
+
+    // assign and remove user from a group
+    Route::post('users/addUserGroup', 'UserController@addUserGroup');
+    Route::get('users/removeUserGroup/{user_id}/{group_id}', '\App\Http\Controllers\UserController@removeUserGroup');
 
     // Add Permission to a user
 Route::post('users/addPermission', '\App\Http\Controllers\UserController@addPermission');

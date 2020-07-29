@@ -52,6 +52,7 @@
         <tr>
           <td>Name</td>
           <td>Email</td>
+          <td>Group</td>
           <td>Type</td>
           <td>Date/Time</td>
           <td>GPS</td>
@@ -63,6 +64,7 @@
     <tr>
       <td>{{$attendancesheet->user->name}}</td>
       <td>{{$attendancesheet->user->email}}</td>
+      <td>{{$attendancesheet->group['group_name']}}</td>
       <td>{{$attendancesheet->action}}</td>
       <td>{{$attendancesheet['created_at']}} <b>({{$attendancesheet['created_at']->diffForHumans()}})</b></td>
       <td><a target="_blank" href="https://www.google.com/search?q={{$attendancesheet->coords}}">Map</a></td>

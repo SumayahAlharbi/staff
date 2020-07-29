@@ -6,6 +6,7 @@ use App\AttendanceSheet;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\User;
+use App\Group;
 use Auth;
 
 class AttendanceSheetController extends Controller
@@ -53,6 +54,7 @@ class AttendanceSheetController extends Controller
         $AttendanceSheet = new \App\AttendanceSheet;
 
         $AttendanceSheet->user_id = Auth::user()->id;
+        $AttendanceSheet->group_id = $request->group_id;
         $AttendanceSheet->action = $request->Action;
         $AttendanceSheet->coords = $request->coords;
 

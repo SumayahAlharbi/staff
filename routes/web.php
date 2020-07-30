@@ -28,6 +28,8 @@ Route::post('AttendanceSheet', 'AttendanceSheetController@store')->name('attenda
 Route::get('/attendance', 'AttendanceSheetController@index')->name('attendance')->middleware('permission:view attendance sheet');
 // Export Attendance Sheet
 Route::post('export/', 'ExportController@attendancesheet')->name('attendancesheet.export')->middleware('permission:export');
+// Show User Profile
+Route::get('/profile/{id}', 'UserController@showUserProfile')->name('profile.show');
 
 Route::group(['middleware' => ['role:admin']], function () {
 

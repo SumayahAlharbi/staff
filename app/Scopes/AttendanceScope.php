@@ -27,10 +27,18 @@ class AttendanceScope implements Scope
          // show the attendance of all group members (admin dose not have groups)
          elseif (Auth::user()->hasPermissionTo('view attendance sheet')) {
            $userGroups = Auth::user()->group;
+           if (count($userGroups)!=0) // check if the user have groups
+           {
+             $userGroupIDs = array();
              foreach ($userGroups as $userGroup) {
                $userGroupIDs[] =  $userGroup->id;
-             };
-           $builder->whereIn('group_id', $userGroupIDs);
+             }
+             $builder->whereIn('group_id', $userGroupIDs);
+           }
+           else { // if not, shows the user attendance only
+             $userId = Auth::user()->id;
+             $builder->where('user_id', '=', $userId);
+           }
          } else { // for users without the permission of (view attendance sheet), show their attendance only
            $userId = Auth::user()->id;
            $builder->where('user_id', '=', $userId);

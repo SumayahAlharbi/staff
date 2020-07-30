@@ -112,15 +112,19 @@
                           @csrf
                         <button type="submit" name="Action" value="Check In" class="btn btn-primary btn-lg btn-block p-5">Check In</button>
                         <button type="submit" name="Action" value="Check Out" class="btn btn-secondary btn-lg btn-block p-5">Check Out</button>
+
                         <div class="form-group">
                             <label for="FormControlSelect">Group</label>
                             <select required class="form-control" name="group_id">
+                                @if(count($user->group) > 1)
                               <option value="">None</option>
+                                @endif
                               @foreach ($groups as $group)
                                 <option value="{{$group->id}}">{{$group->group_name}}</option>
                                 @endforeach
                             </select>
                           </div>
+
                         <div id="coords"></div>
                       </form>
                     </div>

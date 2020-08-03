@@ -42,13 +42,21 @@ class AttendanceSheetController extends Controller
     public function store(Request $request)
     {
         //
+        $userGroups = Auth::user()->group;
+        foreach ($userGroups as $userGroup) {
+          $userGroupIDs[] =  $userGroup->id;
+        };
 
         $request->validate([
           'coords' => 'required',
           'Action' => [
           'required',
           Rule::in(['Check In', 'Check Out']),
-      ],
+        ],
+        'group_id' => [
+          'required',
+          Rule::in($userGroupIDs),
+        ],
     ]);
 
         $AttendanceSheet = new \App\AttendanceSheet;

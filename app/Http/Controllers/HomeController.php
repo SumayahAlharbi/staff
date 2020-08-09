@@ -47,8 +47,7 @@ class HomeController extends Controller
             $groups = Auth::user()->group;
           }
          $user = Auth::user();
-         
-         $groups=Auth::user()->group;
+
          $userGroups = Group::with('user')->get()->unique();
 
          return view('dashboard',compact('user', 'groups','userGroups'));

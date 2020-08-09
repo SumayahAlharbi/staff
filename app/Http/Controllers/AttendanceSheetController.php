@@ -6,6 +6,7 @@ use App\AttendanceSheet;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\User;
+use App\Group;
 use Auth;
 
 class AttendanceSheetController extends Controller
@@ -41,18 +42,27 @@ class AttendanceSheetController extends Controller
     public function store(Request $request)
     {
         //
+        $userGroups = Auth::user()->group;
+        foreach ($userGroups as $userGroup) {
+          $userGroupIDs[] =  $userGroup->id;
+        };
 
         $request->validate([
           'coords' => 'required',
           'Action' => [
           'required',
           Rule::in(['Check In', 'Check Out']),
-      ],
+        ],
+        'group_id' => [
+          'required',
+          Rule::in($userGroupIDs),
+        ],
     ]);
 
         $AttendanceSheet = new \App\AttendanceSheet;
 
         $AttendanceSheet->user_id = Auth::user()->id;
+        $AttendanceSheet->group_id = $request->group_id;
         $AttendanceSheet->action = $request->Action;
         $AttendanceSheet->coords = $request->coords;
 

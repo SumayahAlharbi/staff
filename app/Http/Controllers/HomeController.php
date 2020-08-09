@@ -30,13 +30,13 @@ class HomeController extends Controller
         $fromDate = Carbon::parse(Carbon::now()->toFormattedDateString())->startOfWeek(Carbon::SUNDAY);
         $toDate = Carbon::parse(Carbon::now()->toFormattedDateString())->endOfWeek(Carbon::THURSDAY);
 
-        // $user = auth()->user();
-
+        $groups = Auth::user()->group;
         $user = Auth::user();
         $UserAttendance = AttendanceSheet::where('user_id', '=', $user->id)
         ->whereBetween('created_at', [$fromDate, $toDate])
         ->latest()->take(10)->get();
-        return view('home',compact('user', 'UserAttendance'));
+
+        return view('home',compact('user', 'UserAttendance', 'groups'));
     }
 
     public function dashboardIndex()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AttendanceSheet;
 use App\User;
 use App\Group;
 use Auth;
@@ -144,7 +145,7 @@ class UserController extends Controller
 
     }
 
-    
+
     //add and remove group to user.
 
     public function addUserGroup(Request $request)
@@ -229,6 +230,22 @@ public function revokePermission($permission, $user_id)
    $users->revokePermissionTo($permission);
 
    return back();
+}
+
+/**
+ * Display the specified resource.
+ *
+ * @param  \App\Users  $users
+ * @return \Illuminate\Http\Response
+ */
+public function showUserProfile($id)
+{
+  $user =  User::findOrfail($id);
+  // show all attendance records of auth user (regardless of roles and permissions)
+  $attendancesheets = AttendanceSheet::where('user_id', $id)->latest()->simplePaginate(15);
+
+  return view('profile.index', compact('user','attendancesheets'));
+
 }
 
 }

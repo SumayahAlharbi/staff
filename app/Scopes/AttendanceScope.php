@@ -19,19 +19,23 @@ class AttendanceScope implements Scope
      */
      public function apply(Builder $builder, Model $model)
      {
-       /*
        if (Auth::hasUser()) {
-         $userId = Auth::user()->id;
-         if (Auth::user()->hasRole('admin')) { // for manager role, show all the attendance records
-           $builder;
+         // for admin role, show all the attendance records
+         if (Auth::user()->hasRole('admin')) {
+          $builder;
          }
-         elseif (Auth::user()->hasRole('manager')) { // for manager role, show the attendance of all his group members
-           $builder;
-           //$builder->whereIn('group_id', $userGroupIDs);
-         } else { // for users without role, show their attendance only
-         $builder->where('user_id', '=', $userId);
+         // show the attendance of all group members (admin dose not have groups)
+         elseif (Auth::user()->hasPermissionTo('view attendance sheet')) {
+           $userGroups = Auth::user()->group;
+             foreach ($userGroups as $userGroup) {
+               $userGroupIDs[] =  $userGroup->id;
+             };
+           $builder->whereIn('group_id', $userGroupIDs);
+         } else { // for users without the permission of (view attendance sheet), show their attendance only
+           $userId = Auth::user()->id;
+           $builder->where('user_id', '=', $userId);
          }
        }
-       */
+
      }
 }

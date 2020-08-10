@@ -17,7 +17,7 @@
                     @if($userGroup =$group)
                     @foreach($userGroup->user as $users)
 
-                    <p><a class="badge badge-light" href={{url('/profile/' . $users->id)}}> {{$users->name}}</a></p>
+                    <a class="badge badge-light" href={{url('/profile/' . $users->id)}}> {{$users->name}}</a>
 
                     @endforeach
                     @endif

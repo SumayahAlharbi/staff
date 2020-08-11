@@ -22,6 +22,7 @@ Route::get('/signout', 'Auth\MsGraphLoginController@signout');
 Route::group(['middleware' => 'auth'], function () {
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/dashboard', 'HomeController@dashboardIndex')->name('dashboard');
 
 
 Route::post('AttendanceSheet', 'AttendanceSheetController@store')->name('attendancesheet.store');

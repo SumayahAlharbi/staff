@@ -11,27 +11,27 @@
       </ul>
     </div><br />
   @endif
+
 <div class = 'container'>
   <div class="row">
       <div class="col-12">
           <div class="card">
             <div class="card-header">
-              Add new Permission
+              Invite
             </div>
               <div class="card-body">
-                <form method="post" action="{{ route('permissions.store') }}">
+                <form method="post" action="{{ route('invite') }}">
                     <div class="form-group">
                         @csrf
-                        <label for="name">Permission name</label>
-                        <input type="text" name = "name" class = "form-control" placeholder = "Name">
+                        <label for="name">Email</label>
+                        <input type="email" name = "email" class = "form-control" placeholder = "email">
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary">Invite</button>
                 </form>
               </div>
           </div>
       </div>
   </div>
 </div>
-
 @endsection

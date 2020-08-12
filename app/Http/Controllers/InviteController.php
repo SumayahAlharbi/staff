@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Mail;
+use Auth;
 use App\Mail\InviteCreated;
 use App\Invite;
 use App\User;
+use App\Group;
 
 
 class InviteController extends Controller
@@ -15,8 +17,14 @@ class InviteController extends Controller
   public function invite()
 {
     // show the user a form with an email field to invite a new user
+    $users = User::all();
+    if (Auth::user()->hasRole('admin')) {
+        $groups = Group::all();
+      }else {
+        $groups = Auth::user()->group;
+      }
 
-     return view('invite');
+     return view('invite', compact('users', 'groups'));
 }
 
 public function process(Request $request)
@@ -34,6 +42,7 @@ public function process(Request $request)
     //create a new invite record
     $invite = Invite::create([
         'email' => $request->get('email'),
+        'group_id' => $request->get('group_id'),
         'token' => $token
     ]);
 
@@ -41,8 +50,7 @@ public function process(Request $request)
     Mail::to($request->get('email'))->send(new InviteCreated($invite));
 
     // redirect back where we came from
-    return redirect()
-        ->back();
+    return redirect('/invite')->with('success', 'User has been invited');
 }
 
 public function accept($token)
@@ -55,12 +63,10 @@ public function accept($token)
         abort(404);
     }
 
-    // create the user with the details from the invite
-    User::create([
-      'email' => $invite->email,
-      'name' => 'Invite Test',
-      'password' => '12345678'
-    ]);
+    // find the user with the details from the invite
+  $userFinder = User::where('email', $invite->email)->first();
+  $userFinder->group()->syncWithoutDetaching($invite->group_id);
+
 
     // delete the invite so it can't be used again
     $invite->delete();

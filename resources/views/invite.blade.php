@@ -21,11 +21,28 @@
             </div>
               <div class="card-body">
                 <form method="post" action="{{ route('invite') }}">
+
                     <div class="form-group">
-                        @csrf
-                        <label for="name">Email</label>
-                        <input type="email" name = "email" class = "form-control" placeholder = "email">
-                    </div>
+                      @csrf
+                        <label for="FormControlSelect">Users</label>
+                        <select required class="form-control" name="email">
+                          <option value="">None</option>
+                          @foreach ($users as $user)
+                            <option value="{{$user->email}}">{{$user->name}}</option>
+                            @endforeach
+                        </select>
+                      </div>
+                      <div class="form-group">
+                          <label for="FormControlSelect">Group</label>
+                          <select required class="form-control" name="group_id">
+                              @if(count($user->group) > 1)
+                            <option value="">None</option>
+                              @endif
+                            @foreach ($groups as $group)
+                              <option value="{{$group->id}}">{{$group->group_name}}</option>
+                              @endforeach
+                          </select>
+                        </div>
 
                     <button type="submit" class="btn btn-primary">Invite</button>
                 </form>

@@ -9,11 +9,13 @@ use Illuminate\Queue\SerializesModels;
 
 use App\User;
 use App\Invite;
+use App\Group;
 
 class InviteCreated extends Mailable
 {
     use Queueable, SerializesModels;
     public $invite;
+
     /**
      * Create a new message instance.
      *

@@ -73,7 +73,7 @@ public function accept($token)
 
     // here you would probably log the user in and show them the dashboard, but we'll just prove it worked
 
-    return 'Good job! Invite accepted!';
+    return redirect('/home')->with('success', 'You have been Joined');
 }
 
 }

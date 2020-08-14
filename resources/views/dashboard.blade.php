@@ -21,7 +21,7 @@
                     <h4 class="card-title ">{{ $group->group_name }}</h4>
                     <hr class="mt-2 mb-3"/>
                   <p class="card-text">
-                    @if($userGroup =$group)
+                    @if($userGroup = $group)
                     @foreach($userGroup->user as $users)
 
                     <a class="badge badge-light" href={{url('/profile/' . $users->id)}}> {{$users->name}}</a>

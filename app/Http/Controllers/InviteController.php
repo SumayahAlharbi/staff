@@ -30,7 +30,13 @@ class InviteController extends Controller
 
 public function process(Request $request)
 {
-  $userGroups = Auth::user()->group;
+
+  if (Auth::user()->hasRole('admin')) {
+      $userGroups = Group::all();
+    }else {
+      $userGroups = Auth::user()->group;
+    }
+
   foreach ($userGroups as $userGroup) {
     $userGroupIDs[] =  $userGroup->id;
   };

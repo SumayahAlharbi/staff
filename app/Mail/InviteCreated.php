@@ -33,6 +33,7 @@ class InviteCreated extends Mailable
      */
     public function build()
     {
-      return $this->view('emails.invite');
+      return $this->view('emails.invite')
+      ->subject("You have been invited to a new group");
     }
 }

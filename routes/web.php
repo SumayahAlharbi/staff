@@ -25,8 +25,8 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/dashboard', 'HomeController@dashboardIndex')->name('dashboard');
 
-Route::get('invite', 'InviteController@invite')->name('invite');
-Route::post('invite', 'InviteController@process')->name('process');
+Route::get('invite', 'InviteController@invite')->name('invite')->middleware('permission:invite');
+Route::post('invite', 'InviteController@process')->name('process')->middleware('permission:invite');
 // {token} is a required parameter that will be exposed to us in the controller method
 Route::get('accept/{token}', 'InviteController@accept')->name('accept');
 

@@ -5,9 +5,16 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+
             <div class="card">
                 <div class="card-header">Teams & Members</div>
-                <div class="card-body"></div>
+                <div class="card-body">
+                <div class="button-box text-right">
+                  @can('invite')
+                    <a class="btn btn-outline-success" href="{{ route('invite') }}" title="Invite User To Your Team" role="button"><i class="fas fa-user-plus"></i></a>
+                  @endcan
+                </div>
+                  <p>
               @foreach($groups as $group)
               <div class="card">
                 <div class="card-body">
@@ -21,6 +28,7 @@
 
                     @endforeach
                     @endif
+                  </p>
                   </p>
                 </div>
               </div>

@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Mail;
 use Auth;
 use App\Mail\InviteCreated;
+use Illuminate\Validation\Rule;
 use App\Invite;
 use App\User;
 use App\Group;
@@ -29,6 +30,18 @@ class InviteController extends Controller
 
 public function process(Request $request)
 {
+  $userGroups = Auth::user()->group;
+  foreach ($userGroups as $userGroup) {
+    $userGroupIDs[] =  $userGroup->id;
+  };
+
+  $request->validate([
+    'email' => 'required',
+  'group_id' => [
+    'required',
+    Rule::in($userGroupIDs),
+  ],
+]);
     // process the form submission and send the invite by email
 
     // validate the incoming request data

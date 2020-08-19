@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\AttendanceSheet;
 use Carbon\Carbon;
+use App\Group;
 use Auth;
 
 class HomeController extends Controller
@@ -36,5 +37,19 @@ class HomeController extends Controller
         ->latest()->take(10)->get();
 
         return view('home',compact('user', 'UserAttendance', 'groups'));
+    }
+
+    public function dashboardIndex()
+    {
+        if (Auth::user()->hasRole('admin')) {
+            $groups = Group::all();
+          }else {
+            $groups = Auth::user()->group;
+          }
+         $user = Auth::user();
+
+         $userGroups = Group::with('user')->get()->unique();
+
+         return view('dashboard',compact('user', 'groups','userGroups'));
     }
 }

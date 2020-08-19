@@ -20,6 +20,7 @@
         "league/oauth2-client": "^2.4",
         "microsoft/microsoft-graph": "^1.13",
         "nesbot/carbon": "^2.35",
+        "snapappointments/bootstrap-select": "^1.13",
         "spatie/laravel-permission": "^3.13"
     },
     "require-dev": {

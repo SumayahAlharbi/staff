@@ -11,12 +11,14 @@
       </ul>
     </div><br />
   @endif
-
+<div class = 'container'>
   <div class="row">
       <div class="col-12">
           <div class="card">
+            <div class="card-header">
+              Add new Permission
+            </div>
               <div class="card-body">
-                <h4 class="card-title">Add new Permissions</h4>
                 <form method="post" action="{{ route('permissions.store') }}">
                     <div class="form-group">
                         @csrf
@@ -30,5 +32,6 @@
           </div>
       </div>
   </div>
+</div>
 
 @endsection

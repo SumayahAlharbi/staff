@@ -54,7 +54,7 @@ public function process(Request $request)
 
     do {
         //generate a random string using Laravel's str_random helper
-        $token = Str::random();
+        $token = Str::random(22);
     } //check if the token already exists and if it does, try again
     while (Invite::where('token', $token)->first());
 

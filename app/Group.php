@@ -10,6 +10,6 @@ class Group extends Model
     use SoftDeletes;
     public function user()
     {
-        return $this->belongsToMany('App\User','group_to_user', 'group_id', 'user_id');
+        return $this->belongsToMany('App\User','group_to_user', 'group_id', 'user_id')->withTimestamps();
     }
 }

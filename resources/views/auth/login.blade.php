@@ -9,7 +9,11 @@
 
                 <div class="card-body">
 
-
+                  @if(session()->get('success'))
+                    <div class="alert alert-success">
+                      {{ session()->get('success') }}
+                    </div><br />
+                  @endif
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item">

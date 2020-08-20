@@ -90,9 +90,13 @@ public function accept($token)
     // delete the invite so it can't be used again
     $invite->delete();
 
-    // here you would probably log the user in and show them the dashboard, but we'll just prove it worked
+    // here you would log the user in and show them the home
+    if (Auth::user()) {   // Check is user logged in
+        return redirect('/home')->with('success', 'You have been Joined');
+    } else {
+        return redirect('/login')->with('success', 'You have been Joined');
+    }
 
-    return redirect('/home')->with('success', 'You have been Joined');
 }
 
 }

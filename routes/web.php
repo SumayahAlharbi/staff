@@ -20,6 +20,8 @@ Route::get('/callback', 'Auth\MsGraphLoginController@callback');
 Route::get('/signout', 'Auth\MsGraphLoginController@signout');
 Route::get('/userslist', 'Auth\MsGraphLoginController@usersList')->name('graph.users.list');
 
+Route::get('accept/{token}', 'InviteController@accept')->name('accept');
+
 Route::group(['middleware' => 'auth'], function () {
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
@@ -28,7 +30,6 @@ Route::get('/dashboard', 'HomeController@dashboardIndex')->name('dashboard');
 Route::get('invite', 'InviteController@invite')->name('invite')->middleware('permission:invite');
 Route::post('invite', 'InviteController@process')->name('process')->middleware('permission:invite');
 // {token} is a required parameter that will be exposed to us in the controller method
-Route::get('accept/{token}', 'InviteController@accept')->name('accept');
 
 
 Route::post('AttendanceSheet', 'AttendanceSheetController@store')->name('attendancesheet.store');

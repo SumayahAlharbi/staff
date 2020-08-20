@@ -40,10 +40,13 @@ class ExportController extends Controller
       'Email' => function($queryBuilder) {
         return $queryBuilder->user->email;
       },
-      'Action' => function($queryBuilder) {
+      'Group' => function($queryBuilder) {
+        return $queryBuilder->group['group_name'];
+      },
+      'Type' => function($queryBuilder) {
         return $queryBuilder->action;
       },
-      'Created at' => function($queryBuilder) {
+      'Date/Time' => function($queryBuilder) {
         return $queryBuilder->created_at;
       },
     ];

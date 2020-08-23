@@ -139,6 +139,7 @@
             <thead>
               <tr>
                 <td>Attendance Type</td>
+                <td>Group</td>
                 <td>Timestamp</td>
               </tr>
             </thead>
@@ -146,6 +147,7 @@
               @foreach($UserAttendance as $Attendance)
               <tr>
                 <td>{{$Attendance->action}}</td>
+                <td>{{$Attendance->group['group_name']}}</td>
                 <td>{{$Attendance['created_at']}} ({{$Attendance['created_at']->diffForHumans()}})</td>
               </tr>
               @endforeach

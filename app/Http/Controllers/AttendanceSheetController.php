@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\User;
 use App\Group;
+use Carbon\Carbon;
 use Auth;
 
 class AttendanceSheetController extends Controller
@@ -59,15 +60,24 @@ class AttendanceSheetController extends Controller
         ],
     ]);
 
-        $AttendanceSheet = new \App\AttendanceSheet;
+        // Check user latest attendance - 5 min role
+        $user = Auth::user();
+        $UserAttendance = AttendanceSheet::where('user_id', '=', $user->id)
+        ->where('created_at', '>', Carbon::now()->subMinutes(5)->toDateTimeString())
+        ->get();
 
-        $AttendanceSheet->user_id = Auth::user()->id;
-        $AttendanceSheet->group_id = $request->group_id;
-        $AttendanceSheet->action = $request->Action;
-        $AttendanceSheet->coords = $request->coords;
-
-        $AttendanceSheet->save();
-        return redirect('home')->with('success', 'Attendance has been taken');
+        if ($UserAttendance->isEmpty()) {
+            $AttendanceSheet = new \App\AttendanceSheet;
+            $AttendanceSheet->user_id = Auth::user()->id;
+            $AttendanceSheet->group_id = $request->group_id;
+            $AttendanceSheet->action = $request->Action;
+            $AttendanceSheet->coords = $request->coords;
+            $AttendanceSheet->save();
+            return redirect('home')->with('success', 'Attendance has been taken');
+        }
+        else {
+            return redirect('home')->with('danger', 'Attendance has been taken already!');
+        }
     }
 
     /**

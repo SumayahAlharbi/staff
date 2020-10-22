@@ -20,6 +20,11 @@ class RolesAndPermissionsSeeder extends Seeder
       Permission::firstOrCreate(['name' => 'view attendance sheet']);
       Permission::firstOrCreate(['name' => 'export']);
       Permission::firstOrCreate(['name' => 'invite']);
+      Permission::firstOrCreate(['name' => 'edit users']);
+      Permission::firstOrCreate(['name' => 'add role']);
+      Permission::firstOrCreate(['name' => 'remove role']);
+      Permission::firstOrCreate(['name' => 'add permission']);
+      Permission::firstOrCreate(['name' => 'remove permission']);
       // create roles and assign created permissions
 
       // this can be done as separate statements
@@ -29,7 +34,12 @@ class RolesAndPermissionsSeeder extends Seeder
       $role = Role::firstOrCreate(['name' => 'manager'])
           ->givePermissionTo(['view attendance sheet'])
           ->givePermissionTo(['export'])
-          ->givePermissionTo(['invite']);
+          ->givePermissionTo(['invite'])
+          ->givePermissionTo(['edit users'])
+          ->givePermissionTo(['add role'])
+          ->givePermissionTo(['remove role'])
+          ->givePermissionTo(['add permission'])
+          ->givePermissionTo(['remove permission']);
 
     }
 }

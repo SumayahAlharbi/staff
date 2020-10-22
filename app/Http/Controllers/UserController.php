@@ -23,8 +23,21 @@ class UserController extends Controller
     public function index()
     {
         //
-        $users = User::orderByRaw('created_at DESC')->paginate(10);
-        return view('users.index', compact('users'));
+
+        // if (Auth::user()->hasRole('admin')) {
+          $users = User::GroupUsers()->orderByRaw('created_at DESC')->paginate(10);
+        // }else{
+        //   //Access the pivot table
+        //   $users = User::whereHas('group', function($query) {
+        //     $userGroups = Auth::user()->group;
+        //     foreach ($userGroups as $userGroup) {
+        //     $userGroupIDs[] =  $userGroup->id;
+        //   };
+        //   $query->whereIn('group_id', $userGroupIDs); })->orderByRaw('created_at DESC')->paginate(10);
+        //   };
+
+
+        return  view('users.index', compact('users'));
     }
 
     /**
@@ -77,7 +90,7 @@ class UserController extends Controller
     $matchingUsers = User::where('id', 'LIKE', '%' . $request->searchKey . '%')
       ->orWhere('name', 'LIKE', '%' . $request->searchKey . '%')
       ->orWhere('email', 'LIKE', '%' . $request->searchKey . '%')
-      ->orWhere('name', 'LIKE', '%' . $request->searchKey . '%')->paginate(10);
+      ->orWhere('name', 'LIKE', '%' . $request->searchKey . '%')->GroupUsers()->paginate(10);
 
     return view('users.search', compact('matchingUsers'));
   }
@@ -93,10 +106,14 @@ class UserController extends Controller
      {
       // $user = Auth::user();
        // if ($user->hasRole('SuperAdmin')) {
-         $user = \App\User::findOrfail($id);
+         $user = \App\User::GroupUsers()->findOrfail($id);
          $userGroups = $user->group;
          $groups = \App\Group::all();
-         $roles = Role::all()->pluck('name');
+         if (Auth::user()->hasRole('admin')) {
+        $roles = Role::all()->pluck('name');
+      }else {
+        $roles = Role::where('name','!=','admin')->pluck('name');
+      }
          $userRoles = $user->roles;
          $permissions = Permission::all()->pluck('name');
          $userPermissions = $user->permissions;
@@ -126,7 +143,7 @@ class UserController extends Controller
             'name' => 'required|max:191|string',
             'password' => 'nullable|between:6,50|string',
             ]);
-       $user = \App\User::findOrfail($request->user_id);
+       $user = \App\User::GroupUsers()->findOrfail($request->user_id);
 
        $user->email = $request->email;
        $user->name = $request->name;
@@ -150,14 +167,14 @@ class UserController extends Controller
 
     public function addUserGroup(Request $request)
     {
-      $user = User::findorfail($request->user_id);
+      $user = User::GroupUsers()->findorfail($request->user_id);
       $user->group()->syncWithoutDetaching($request->group_id);
       return back();
     }
 
     public function removeUserGroup($group_id, $user_id)
     {
-      $user = User::findorfail($user_id);
+      $user = User::GroupUsers()->findorfail($user_id);
 
       $user->group()->detach($group_id);
 
@@ -174,8 +191,24 @@ class UserController extends Controller
      */
     public function addRole(Request $request)
     {
-        $users = User::findOrfail($request->user_id);
+if (Auth::user()->hasRole('admin')) {
+  $request->validate([
+    'role_name' => 'required',
+  ]);
+} else {
+  $request->validate([
+    'role_name' => [
+   'required',
+   Rule::in(['manager']),
+    ],
+  ]);
+}
+        $users = User::GroupUsers()->findOrfail($request->user_id);
+         if (Auth::user()->hasRole('admin')) {
         $roles = Role::all()->pluck('name');
+      }else {
+        $roles = Role::where('name','!=','admin')->pluck('name');
+      }
         $userRoles = $users->roles;
         $users->assignRole($request->role_name);
 
@@ -189,12 +222,17 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function revokeRole($role, $user_id)
+    public function revokeRole(Request $request, $role, $user_id)
     {
-        $users = \App\User::findorfail($user_id);
+        $users = \App\User::GroupUsers()->findorfail($user_id);
 
+        if (Auth::user()->hasRole('admin')) {
         $users->removeRole($role);
-
+      } elseif ($role == 'manager') {
+        $users->removeRole($role);
+      } else {
+        return back()->with('danger', 'Invalid Request');
+      }
         return back();
     }
 
@@ -208,7 +246,7 @@ class UserController extends Controller
 */
 public function addPermission(Request $request)
 {
-   $users = User::findOrfail($request->user_id);
+   $users = User::GroupUsers()->findOrfail($request->user_id);
    $permissions = Permission::all()->pluck('name');
    $userPermissions = $users->permissions;
    $users->givePermissionTo($request->permission_name);
@@ -225,7 +263,7 @@ public function addPermission(Request $request)
 */
 public function revokePermission($permission, $user_id)
 {
-   $users = \App\User::findorfail($user_id);
+   $users = \App\User::GroupUsers()->findorfail($user_id);
 
    $users->revokePermissionTo($permission);
 

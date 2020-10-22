@@ -36,6 +36,7 @@
                             <option value="{{$user->email}}">{{$user->name}}</option>
                             @endforeach
                         </select>
+                        <h6> Note: Only users that sign in at least once will be shown in this list </h6>
                       </div>
                       <div class="form-group">
                           <label for="FormControlSelect">Group</label>

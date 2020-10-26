@@ -28,12 +28,12 @@
             // console.log(GOOGLE_API);
             var latlon = position.coords.latitude + "," + position.coords.longitude;
             var img_url = "https://maps.googleapis.com/maps/api/staticmap?center="+latlon+"&zoom=16&scale=2&size=600x400&maptype=roadmap&key="+GOOGLE_API+"&format=png&visual_refresh=true&markers=size:small%7Ccolor:0x171faa%7Clabel:1%7C"+latlon;
-            
+
 
             // it should be .10 later
-            if(distance < .10){ 
+            if(distance < .22){ 
 
-              
+
               // $("#message").text("Yes, you're inside radius (100 Meters) 🎉");
               document.getElementById('spinner').style.display = "none";
               document.getElementById('highlight').style.display = "none";

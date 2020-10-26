@@ -20,6 +20,8 @@ Route::get('/callback', 'Auth\MsGraphLoginController@callback');
 Route::get('/signout', 'Auth\MsGraphLoginController@signout');
 Route::get('/userslist', 'Auth\MsGraphLoginController@usersList')->name('graph.users.list');
 
+Route::get('accept/{token}', 'InviteController@accept')->name('accept');
+
 Route::group(['middleware' => 'auth'], function () {
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
@@ -28,7 +30,6 @@ Route::get('/dashboard', 'HomeController@dashboardIndex')->name('dashboard');
 Route::get('invite', 'InviteController@invite')->name('invite')->middleware('permission:invite');
 Route::post('invite', 'InviteController@process')->name('process')->middleware('permission:invite');
 // {token} is a required parameter that will be exposed to us in the controller method
-Route::get('accept/{token}', 'InviteController@accept')->name('accept');
 
 
 Route::post('AttendanceSheet', 'AttendanceSheetController@store')->name('attendancesheet.store');
@@ -38,17 +39,23 @@ Route::post('export/', 'ExportController@attendancesheet')->name('attendanceshee
 // Show User Profile
 Route::get('/profile/{id}', 'UserController@showUserProfile')->name('profile.show');
 
+
+Route::resource('users', 'UserController', ['only' => ['index', 'edit']])->middleware('permission:edit users');
+Route::get('/userSearch', 'UserController@userSearch')->name('user.userSearch')->middleware('permission:edit users');
+Route::post('users/addRole', '\App\Http\Controllers\UserController@addRole')->middleware('permission:add role');
+Route::get('users/removeRole/{role}/{user_id}', '\App\Http\Controllers\UserController@revokeRole')->middleware('permission:remove role');
+// Add Permission to a user
+Route::post('users/addPermission', '\App\Http\Controllers\UserController@addPermission')->middleware('permission:add permission');
+Route::get('users/removePermission/{permission}/{user_id}', '\App\Http\Controllers\UserController@revokePermission')->middleware('permission:remove permission');
+
 Route::group(['middleware' => ['role:admin']], function () {
 
+  //Users route
+  Route::resource('users', 'UserController', ['except' => ['index', 'edit']]);
 
 Route::resource('permissions', 'PermissionController');
 Route::resource('roles', 'RoleController');
 
-//Users route
-Route::resource('users', 'UserController');
-Route::get('/userSearch', 'UserController@userSearch')->name('user.userSearch');
-Route::post('users/addRole', '\App\Http\Controllers\UserController@addRole');
-Route::get('users/removeRole/{role}/{user_id}', '\App\Http\Controllers\UserController@revokeRole');
 
 //Groups Routes
 Route::resource('group', 'GroupController');
@@ -57,9 +64,7 @@ Route::resource('group', 'GroupController');
     Route::post('users/addUserGroup', 'UserController@addUserGroup');
     Route::get('users/removeUserGroup/{user_id}/{group_id}', '\App\Http\Controllers\UserController@removeUserGroup');
 
-    // Add Permission to a user
-Route::post('users/addPermission', '\App\Http\Controllers\UserController@addPermission');
-Route::get('users/removePermission/{permission}/{user_id}', '\App\Http\Controllers\UserController@revokePermission');
+
 
     //roles has permissions Routes
 

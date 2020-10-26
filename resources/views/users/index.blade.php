@@ -4,10 +4,12 @@
 
 <div class='container'>
   <div class="row">
-    <div class="col">
+    @role('admin')
+    <div class="col-md-6">
       <a class="btn btn-primary" href="{{ route('users.create')}}" role="button">New <i class="icon ion-md-add-circle"></i></a>
     </div>
-    <div class="col">
+    @endrole
+    <div class="col-md-6">
       <form method="get" action="{{ route('user.userSearch') }}">
         <div class="input-group">
           <label class="sr-only">Search</label>

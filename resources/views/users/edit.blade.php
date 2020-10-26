@@ -15,6 +15,11 @@
        {{ session()->get('success') }}
      </div><br />
    @endif
+   @if(session()->get('danger'))
+     <div class="alert alert-danger">
+       {{ session()->get('danger') }}
+     </div><br />
+   @endif
    @if ($errors->any())
      <div class="alert alert-danger">
        <ul>
@@ -113,7 +118,7 @@
 
                          @endforeach
                        </div>
-
+        @role('admin')
    <!-- add and remove groups to user -->
       <div class="form-group">
         <h5>Add user to groups</h5>
@@ -168,7 +173,7 @@
             <button type="submit" class="btn btn-primary">Update</button>
           </div>
   			</form>
-
+        @endrole
 
 
 

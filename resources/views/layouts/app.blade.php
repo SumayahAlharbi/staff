@@ -35,14 +35,21 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                        @if (Auth::check())
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                                 </li>
+                        @endif
                       @can('view attendance sheet')
                       <li class="nav-item">
                                   <a class="nav-link" href="{{ route('attendance') }}">Attendance Sheet</a>
                                   </li>
                       @endcan
+                      @can('edit users')
+                      <li class="nav-item">
+                 <a class="nav-link" href="{{ route('users.index') }}">Users</a>
+                     </li>
+                     @endcan
                             @role('admin')
                                   <li class="nav-item">
                               <a class="nav-link" href="{{ route('roles.index') }}">Roles</a>
@@ -50,9 +57,7 @@
                                     <li class="nav-item">
                                     <a class="nav-link" href="{{ route('permissions.index') }}">Permissions</a>
                                     </li>
-                                     <li class="nav-item">
-                                <a class="nav-link" href="{{ route('users.index') }}">Users</a>
-                                    </li>
+
                                     <li class="nav-item">
                               <a class="nav-link" href="{{ route('group.index') }}">Groups</a>
                                     </li>

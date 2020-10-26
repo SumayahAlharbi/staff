@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -41,6 +42,22 @@ class User extends Authenticatable
 
     public function group()
     {
-        return $this->belongsToMany('App\Group','group_to_user', 'user_id', 'group_id');
+        return $this->belongsToMany('App\Group','group_to_user', 'user_id', 'group_id')->withTimestamps();
     }
+
+//Scopes
+public function scopeGroupUsers($query)
+   {
+     if (Auth::user()->hasRole('admin')) {
+       return $query;
+     }else {
+       return $query->whereHas('group', function($query) {
+         $userGroups = Auth::user()->group;
+         foreach ($userGroups as $userGroup) {
+         $userGroupIDs[] =  $userGroup->id;
+       };
+       $query->whereIn('group_id', $userGroupIDs); });
+     }
+   }
+
 }

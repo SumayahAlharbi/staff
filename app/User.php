@@ -51,6 +51,7 @@ public function scopeGroupUsers($query)
      if (Auth::user()->hasRole('admin')) {
        return $query;
      }else {
+       // Access Pivot Table
        return $query->whereHas('group', function($query) {
          $userGroups = Auth::user()->group;
          foreach ($userGroups as $userGroup) {

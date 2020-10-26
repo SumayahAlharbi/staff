@@ -23,20 +23,8 @@ class UserController extends Controller
     public function index()
     {
         //
-
-        // if (Auth::user()->hasRole('admin')) {
           $users = User::GroupUsers()->orderByRaw('created_at DESC')->paginate(10);
-        // }else{
-        //   //Access the pivot table
-        //   $users = User::whereHas('group', function($query) {
-        //     $userGroups = Auth::user()->group;
-        //     foreach ($userGroups as $userGroup) {
-        //     $userGroupIDs[] =  $userGroup->id;
-        //   };
-        //   $query->whereIn('group_id', $userGroupIDs); })->orderByRaw('created_at DESC')->paginate(10);
-        //   };
-
-
+ 
         return  view('users.index', compact('users'));
     }
 

@@ -42,7 +42,7 @@ public function process(Request $request)
   };
 
   $request->validate([
-    'email' => 'required',
+    'email' => 'exists:users,email|required|max:191|string|email|ends_with:@ksau-hs.edu.sa',
   'group_id' => [
     'required',
     Rule::in($userGroupIDs),

@@ -12,12 +12,15 @@
           </div>
         </div>
     </form>
-      @if ($usersSearch)
+    @if ($usersSearch)
+      @if (count($users) > 0)
       <div class="list-group col-md-11 position-absolute" style="z-index:1">
       @foreach ($users as $user)
-            <a href="{{url('/users')}}/{{$user->id}}/edit" class="list-group-item list-group-item-action"> {{$user->name}} </a>
+            <a href="{{url('/users')}}/{{$user->id}}/edit" class="list-group-item list-group-item-action"> {{ $user->name }} </a>
       @endforeach
+      @else
+      <a href"#" class="list-group-item list-group-item-action position-absolute" style="z-index:1"> No Results for {{ $usersSearch }} </a>
+      @endif
       </div>
       @endif
-      
 </div>

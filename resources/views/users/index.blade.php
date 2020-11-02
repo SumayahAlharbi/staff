@@ -110,7 +110,7 @@
   </table>
   <div class="row">
     <div class="col-md-12">
-{{ $users->onEachSide(1)->links() }}
+{{ $users->links() }}
   </div>
   </div>
 

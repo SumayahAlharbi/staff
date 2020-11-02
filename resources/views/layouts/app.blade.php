@@ -58,9 +58,11 @@
                                     <li class="nav-item">
                                     <a class="nav-link" href="{{ route('permissions.index') }}">Permissions</a>
                                     </li>
-
                                     <li class="nav-item">
                               <a class="nav-link" href="{{ route('group.index') }}">Groups</a>
+                                    </li>
+                                    <li class="nav-item">
+                              <a class="nav-link" href="{{ url('telescope') }}">Telescope 🔭</a>
                                     </li>
                             @endrole
                     </ul>

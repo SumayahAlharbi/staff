@@ -4,10 +4,14 @@
           <label class="sr-only">Search</label>
           <div class="input-group">
             <input wire:model.debounce.500ms="usersSearch" type="text" name="searchKey" class="form-control" placeholder="Search">
+            <div wire:loading class="clearfix position-absolute">
+            <div class="spinner-grow text-info float-right" role="status">
+              <span class="sr-only">Loading...</span>
+           </div>
+          </div>
             <div class="input-group-append">
               <button type="submit" class="btn btn-primary">
                 <span class="fas fa-search"></span></button>
-
             </div>
           </div>
         </div>

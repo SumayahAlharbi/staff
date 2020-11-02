@@ -9,21 +9,8 @@
       <a class="btn btn-primary" href="{{ route('users.create')}}" role="button">New <i class="icon ion-md-add-circle"></i></a>
     </div>
     @endrole
-    <div class="col-md-6">
-      <form method="get" action="{{ route('user.userSearch') }}">
-        <div class="input-group">
-          <label class="sr-only">Search</label>
-          <div class="input-group">
-            <input type="text" name="searchKey" class="form-control" placeholder="Search">
-            <div class="input-group-append">
-              <button type="submit" class="btn btn-primary">
-                <span class="fas fa-search"></span></button>
-
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
+   
+    <livewire:users-search>
 
   </div>
 <button type="button" class="btn btn-link"></button>

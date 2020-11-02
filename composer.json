@@ -19,6 +19,7 @@
         "laravel/ui": "^2.0",
         "league/csv": "^9.6",
         "league/oauth2-client": "^2.4",
+        "livewire/livewire": "^2.3",
         "microsoft/microsoft-graph": "^1.13",
         "nesbot/carbon": "^2.35",
         "snapappointments/bootstrap-select": "^1.13",
@@ -59,6 +60,9 @@
     "prefer-stable": true,
     "scripts": {
         "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi",
+            "@php artisan vendor:publish --force --tag=livewire:assets --ansi",
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],

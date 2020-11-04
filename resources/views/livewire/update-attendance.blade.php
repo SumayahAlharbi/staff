@@ -1,4 +1,4 @@
-<div wire:poll>
+<div>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -9,8 +9,14 @@
           <td>Date/Time</td>
           <td>GPS</td>
         </tr>
+        <tr>
+    <td>
+    <button wire:click="render" type="button" class="btn btn-outline-success"><i class="fas fa-sync"></i> Refresh</button>
+</td>
+</tr>
     </thead>
     <tbody>
+   
     @foreach($attendancesheets as $attendancesheet)
     <tr>
       <td>{{$attendancesheet->user->name}}</td>

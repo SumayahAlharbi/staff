@@ -108,6 +108,7 @@
         </nav>
 
         <main class="py-4">
+        <livewire:offline-warning>
             @yield('content')
         </main>
     </div>

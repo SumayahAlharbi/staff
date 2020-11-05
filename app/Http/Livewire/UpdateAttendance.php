@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\AttendanceSheet;
 
 
+
 class UpdateAttendance extends Component
 {
     use WithPagination;
@@ -15,7 +16,7 @@ class UpdateAttendance extends Component
     public function render()
     {
         return view('livewire.update-attendance',[
-            'attendancesheets' => AttendanceSheet::latest()->paginate(15),
+            'attendancesheets' => AttendanceSheet::LocalAttendanceSheet()->latest()->paginate(15),
             ]);
     }
 }

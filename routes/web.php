@@ -34,6 +34,9 @@ Route::post('invite', 'InviteController@process')->name('process')->middleware('
 
 Route::post('AttendanceSheet', 'AttendanceSheetController@store')->name('attendancesheet.store');
 Route::get('/attendance', 'AttendanceSheetController@index')->name('attendance')->middleware('permission:view attendance sheet');
+Route::get('/absent', 'AttendanceSheetController@absent')->name('absent')->middleware('permission:view attendance sheet');
+Route::post('/absent', 'AttendanceSheetController@absent')->name('absent')->middleware('permission:view attendance sheet');
+
 // Export Attendance Sheet
 Route::post('export/', 'ExportController@attendancesheet')->name('attendancesheet.export')->middleware('permission:export');
 // Show User Profile

@@ -37,7 +37,7 @@ class AttendanceSheetController extends Controller
 
         $absentSheets = User::GroupUsers()->whereDoesntHave('attendance', function ($query) use ($date, $type) {
             $query->whereDate('created_at', $date)->where('action', $type);
-        })->simplePaginate(5)->appends([
+        })->simplePaginate(15)->appends([
             'date' => request('date'),
             'type' => request('type'),
         ]);

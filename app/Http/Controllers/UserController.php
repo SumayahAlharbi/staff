@@ -78,7 +78,7 @@ class UserController extends Controller
     $matchingUsers = User::where('id', 'LIKE', '%' . $request->searchKey . '%')
       ->orWhere('name', 'LIKE', '%' . $request->searchKey . '%')
       ->orWhere('email', 'LIKE', '%' . $request->searchKey . '%')
-      ->orWhere('name', 'LIKE', '%' . $request->searchKey . '%')->GroupUsers()->paginate(10);
+      ->orWhere('name', 'LIKE', '%' . $request->searchKey . '%')->GroupUsers()->paginate(10)->appends('searchKey', request('searchKey'));
 
     return view('users.search', compact('matchingUsers'));
   }

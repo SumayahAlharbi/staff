@@ -44,6 +44,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Group','group_to_user', 'user_id', 'group_id')->withTimestamps();
     }
+    public function attendance()
+    {
+      return $this->hasMany('App\AttendanceSheet');
+    }
 
 //Scopes
 public function scopeGroupUsers($query)

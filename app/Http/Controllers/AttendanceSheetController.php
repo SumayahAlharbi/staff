@@ -24,6 +24,25 @@ class AttendanceSheetController extends Controller
       return view('attendance.index', compact('attendancesheets'));
     }
 
+    public function absent(Request $request)
+    {
+    //         $request->validate([
+    //         'type' => [
+    //         'required',
+    //         Rule::in(['Check In', 'Check Out']),
+    //       ],
+    //   ]);
+        $date = Carbon::parse($request->input('date'))->startOfDay();
+        $type = $request->input('type');
+
+        $absentSheets = User::GroupUsers()->whereDoesntHave('attendance', function ($query) use ($date, $type) {
+            $query->whereDate('created_at', $date)->where('action', $type);
+        })->simplePaginate(15);
+        
+        return view('attendance.absent', compact('absentSheets','date','type'));
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

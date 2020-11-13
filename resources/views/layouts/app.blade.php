@@ -40,7 +40,15 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('invitations') }}">Invitations Inbox</a>
+                                </li>
                         @endif
+                        @can('invite')
+                      <li class="nav-item">
+                                  <a class="nav-link" href="{{ route('invite') }}">Invite</a>
+                                  </li>
+                      @endcan
                       @can('view attendance sheet')
                       <li class="nav-item">
                                   <a class="nav-link" href="{{ route('attendance') }}">Attendance Sheet</a>
@@ -52,18 +60,25 @@
                      </li>
                      @endcan
                             @role('admin')
-                                  <li class="nav-item">
-                              <a class="nav-link" href="{{ route('roles.index') }}">Roles</a>
-                                  </li>
-                                    <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('permissions.index') }}">Permissions</a>
-                                    </li>
-                                    <li class="nav-item">
-                              <a class="nav-link" href="{{ route('group.index') }}">Groups</a>
-                                    </li>
-                                    <li class="nav-item">
-                              <a class="nav-link" href="{{ url('telescope') }}">Telescope 🔭</a>
-                                    </li>
+                            <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Admin <span class="caret"></span>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item"
+                               href="{{ route('roles.index') }}">Roles</a>
+                                  
+                                    <a class="dropdown-item"
+                                     href="{{ route('permissions.index') }}">Permissions</a>
+                                    
+                                    <a class="dropdown-item"
+                               href="{{ route('group.index') }}">Groups</a>
+                                    
+                                    <a class="dropdown-item"
+                               href="{{ url('telescope') }}">Telescope 🔭</a>
+                                    
+                                </div>
+                            </li>
                             @endrole
                     </ul>
 

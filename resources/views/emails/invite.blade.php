@@ -11,7 +11,7 @@
 <p> Not working? </p>
  <p> 1- Vist: staff.ksauhs.com </p>
  <p> 2- Log in </p>
- <p> 3- Go to the invitations page </p>
+ <p> 3- Go to the Invitations Inbox </p>
  <p> 4- Accept the invitation </p>
  
 @endsection

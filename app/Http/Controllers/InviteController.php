@@ -15,6 +15,12 @@ use App\Group;
 
 class InviteController extends Controller
 {
+  public function index()
+    {
+      $invitations = Invite::where('email', Auth::user()->email)->latest()->simplePaginate(15);
+      
+      return view('invitations.index', compact('invitations'));
+    }
   public function invite()
 {
     // show the user a form with an email field to invite a new user

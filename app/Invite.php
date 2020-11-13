@@ -9,4 +9,9 @@ class Invite extends Model
   protected $fillable = [
   'email', 'group_id', 'token',
 ];
+
+public function group()
+  {
+  return $this->belongsTo('App\Group');
+    }
 }

@@ -54,6 +54,11 @@
                                   <a class="nav-link" href="{{ route('attendance') }}">Attendance Sheet</a>
                                   </li>
                       @endcan
+                      @can('view attendance sheet')
+                      <li class="nav-item">
+                                  <a class="nav-link" href="{{ route('absence') }}">Absence Sheet</a>
+                                  </li>
+                      @endcan
                       @can('edit users')
                       <li class="nav-item">
                  <a class="nav-link" href="{{ route('users.index') }}">Users</a>
@@ -67,16 +72,16 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                   <a class="dropdown-item"
                                href="{{ route('roles.index') }}">Roles</a>
-                                  
+
                                     <a class="dropdown-item"
                                      href="{{ route('permissions.index') }}">Permissions</a>
-                                    
+
                                     <a class="dropdown-item"
                                href="{{ route('group.index') }}">Groups</a>
-                                    
+
                                     <a class="dropdown-item"
                                href="{{ url('telescope') }}">Telescope 🔭</a>
-                                    
+
                                 </div>
                             </li>
                             @endrole

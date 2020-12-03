@@ -8,7 +8,9 @@ use Illuminate\Validation\Rule;
 use App\User;
 use App\Group;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Auth;
+use DB;
 
 class AbsentSheetController extends Controller
 {
@@ -26,72 +28,44 @@ class AbsentSheetController extends Controller
     public function absence(Request $request)
     {
       $request->validate([
-              //'check_in' => 'required_without_all:check_out',
-              //'check_out' => 'required_without_all:check_in',
               'group_id' => 'required_unless:none,0',
-              'from_date' => 'required',
-              'to_date' => 'required',
+              'date' => 'required',
         ]);
 
-      $from_date = $request->input('from_date');
-      $to_date = $request->input('to_date');
-      //$check_in = $request->input('check_in');
-      //$check_out = $request->input('check_out');
+      $date = $request->input('date');
       $group_id = $request->input('group_id');
 
-      /*$absentsheets = User::GroupUsers()->whereDoesntHave('attendance', function ($query) use ($from_date, $to_date, $group_id) {
-      $query->selectRaw('day(created_at) day')
-            ->whereBetween('created_at', [$from_date, $to_date])
-            ->where('group_id', '=', $group_id)
-            ->havingRaw('COUNT(*) = 2') // users must have two attendance records daily (check in, check out)
-            ->groupBy('day');
-          })->simplePaginate(15);
-          */
+      $totallyAbsent = User::GroupUsers()
+      ->whereDoesntHave('attendance', function ($query) use ($date, $group_id) {
+      $query->select(DB::raw("COUNT(*) count, day(created_at) day"))
+              ->where('created_at', '=', $date)
+              ->where('group_id', '=', $group_id)
+              ->havingRaw('COUNT(*) = 2') // users must have two attendance records daily (check in, check out)
+              ->groupBy('day');
+            })->simplePaginate(15)->appends([
+          'group_id' => $group_id,
+          'date' => $date,
+      ]);
 
-      /*$absentsheets_missing = User::GroupUsers()->whereHas('attendance', function ($query) use ($from_date, $to_date, $group_id) {
-      $query->selectRaw('action, user_id, created_at')
-          ->whereBetween('created_at', [$from_date, $to_date])
-                ->where('group_id', '=', $group_id)
-                ->havingRaw('COUNT(*) = 1') // users must have two attendance records daily (check in, check out)
-                ->groupBy('action', 'user_id', 'created_at');
-              })->get();
-              */
-      $absentsheets = User::GroupUsers()
+      $partiallyAbsent = User::GroupUsers()
       ->with('attendance')
-      ->whereHas('attendance', function ($query) use ($from_date, $to_date, $group_id) {
-      $query->selectRaw('day(created_at) day')
-            ->whereBetween('created_at', [$from_date, $to_date])
+      ->whereHas('attendance', function ($query) use ($date, $group_id) {
+      $query->select(DB::raw("COUNT(*) count, day(created_at) day"))
+            ->whereDate('created_at', '=', $date)
             ->where('group_id', '=', $group_id)
             ->havingRaw('COUNT(*) = 1') // users with one attendance records daily
             ->groupBy('day');
-          })->simplePaginate(15)->appends([
-              'group_id' => $group_id,
-              'from' => $from_date,
-              'to' => $to_date,
-          ]);
+          })->simplePaginate(15);
 
+      foreach ($totallyAbsent as $key => $value) {
+        foreach ($partiallyAbsent as $key2 => $value2) {
+        if ( $value->id == $value2->id)
+         unset($totallyAbsent[$key]);
+      }
+      }
 
-          /*$array = array();
-          foreach ($absentsheets_missing as $key => $value) {
-            $search = AttendanceSheet::select('action','created_at')
-            ->where('user_id','=',$key)
-            ->where('group_id','=',$group)
-            ->where('created_at','=','')
-            ->get();
-            $array = $search;
-          }*/
-
-
-      /*->simplePaginate(15)->appends([
-          'group_id' => $group_id,
-          'from' => $from_date,
-          'to' => $to_date,
-      ]);
-      */
-
-      //return $absentsheets;
       $userGroups = Auth::user()->group;
-      return view('absence.index', compact('absentsheets','userGroups'));
-
+      $group = Group::where('id','=',$group_id)->get();
+      return view('absence.index', compact('partiallyAbsent', 'userGroups', 'totallyAbsent','date','group'));
     }
 }

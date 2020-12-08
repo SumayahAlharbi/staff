@@ -17,7 +17,7 @@
   @can('export')
   <div class="card">
     <div class="card-body">
-  <form method="post" action="{{ route('absence') }}">
+  <form method="get" action="{{ route('absencesheet') }}">
     <div class="row">
       <div class="form-group col-md-4">
         <label for="Group">Group Name</label>
@@ -35,16 +35,19 @@
       </div>
     </div>
     <button type="submit" class="btn btn-primary">Search</button>
+    {{--@if(isset($partiallyAbsent) OR isset($totallyAbsent))
+    <a href="{{route('absencesheet.export', ['group_id' => $group->id, 'date'=> $date])}}" class="btn btn-success">Export</a>
+    @endif--}}
   </form>
 </div>
 </div>
 
 @isset($partiallyAbsent)
-<br>
-<div class="col-md-10"> Missing check in or check out of group: {{$group->group_name}}, date: {{\Carbon\Carbon::parse($date)->format('d-m-Y')}} </div>
+{{--<div class="col-md-10"> Missing <b>Check In</b> or <b>Check Out</b> </div>--}}
   <table class="table table-striped">
     <thead>
         <tr>
+          <td>Group</td>
           <td>Name</td>
           <td>Email</td>
           <td>Type</td>
@@ -54,6 +57,7 @@
     <tbody>
       @foreach($partiallyAbsent as $absentsheet)
         <tr>
+          <td>{{$group->group_name}}</td>
           <td>{{$absentsheet->name}}</td>
           <td>{{$absentsheet->email}}</td>
           <td>
@@ -66,25 +70,37 @@
           <td>{{ \Carbon\Carbon::parse($absentsheet->attendance[0]->created_at)->format('d-m-Y') }}</td>
       </tr>
         @endforeach
+        @foreach($totallyAbsent as $key => $value)
+          <tr>
+            <td>{{$group->group_name}}</td>
+            <td>{{$value->name}}</td>
+            <td>{{$value->email}}</td>
+            <td>
+            Absent
+            </td>
+            <td>{{ \Carbon\Carbon::parse($date)->format('d-m-Y') }}</td>
+        </tr>
+          @endforeach
       </tbody>
-      <tfoot>
+      {{--<tfoot>
           <tr>
               <td colspan="6">
                   <div class="text-right">
-                      <ul> {{ $partiallyAbsent->links() }} </ul>
+                      <ul> {!! $partiallyAbsent->appends(['group_id' => $group->id, 'date' => $date])->render() !!} </ul>
                   </div>
               </td>
           </tr>
-      </tfoot>
+      </tfoot>--}}
       </table>
   @endif
 
 
-@isset($totallyAbsent)
-<div class="col-md-10"> Absent members of group: {{$group->group_name}}, date: {{\Carbon\Carbon::parse($date)->format('d-m-Y')}} </div>
+{{--@isset($totallyAbsent)
+<div class="col-md-10"> Absent members</div>
 <table class="table table-striped">
   <thead>
       <tr>
+        <td>Group</td>
         <td>Name</td>
         <td>Email</td>
         <td>Type</td>
@@ -94,6 +110,7 @@
   <tbody>
   @foreach($totallyAbsent as $key => $value)
     <tr>
+      <td>{{$group->group_name}}</td>
       <td>{{$value->name}}</td>
       <td>{{$value->email}}</td>
       <td>
@@ -107,14 +124,15 @@
     <tr>
         <td colspan="6">
             <div class="text-right">
-                <ul> {{ $totallyAbsent->links() }} </ul>
+                <ul> {!! $totallyAbsent->appends(['group_id' => $group->id, 'date' => $date])->render() !!} </ul>
             </div>
         </td>
     </tr>
 </tfoot>
 </table>
-@endif
-  @endcan
+@endif--}}
+
+@endcan
 </div>
 </div>
 @endsection

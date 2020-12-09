@@ -9,6 +9,8 @@ use App\User;
 use Auth;
 use CSVReport;
 use Carbon\Carbon;
+use DB;
+use App\Group;
 
 class ExportController extends Controller
 {
@@ -54,6 +56,79 @@ class ExportController extends Controller
     CSVReport::of($title, $meta, $queryBuilder, $columns)
     ->showNumColumn(false)
     ->download($filename);
+  }
+
+  public function downloadAbsencesheet($group_id, $date)
+  {
+    $date = $date;
+    $group_id = $group_id;
+
+    $totallyAbsent = User::GroupUsers()
+    ->whereDoesntHave('attendance', function ($query) use ($date, $group_id) {
+    $query->select(DB::raw("COUNT(*) count, day(created_at) day"))
+            ->where('created_at', '=', $date)
+            ->where('group_id', '=', $group_id)
+            ->havingRaw('COUNT(*) = 2') // users must have two attendance records daily (check in, check out)
+            ->groupBy('day');
+            })->get();
+
+    $partiallyAbsent = User::GroupUsers()
+    ->with('attendance')
+    ->whereHas('attendance', function ($query) use ($date, $group_id) {
+    $query->select(DB::raw("COUNT(*) count, day(created_at) day"))
+          ->whereDate('created_at', '=', $date)
+          ->where('group_id', '=', $group_id)
+          ->havingRaw('COUNT(*) = 1') // users with one attendance records daily
+          ->groupBy('day');
+        })->get();
+
+    $group = Group::select('group_name')->where('id','=',$group_id)->first();
+
+    foreach ($totallyAbsent as $key => $value) {
+      foreach ($partiallyAbsent as $key2 => $value2) {
+          if ( $value->id == $value2->id)
+           unset($totallyAbsent[$key]);
+        }
+      }
+
+    foreach ($totallyAbsent as $key => $value) {
+        unset($value->id);
+        unset($value->email_verified_at);
+        unset($value->created_at);
+        unset($value->updated_at);
+    }
+
+    $totallyAbsentArray = array();
+    foreach ($totallyAbsent as $key => $value) {
+      $totallyAbsentArray[$key] = [$group->group_name, $value->name, $value->email,
+       'Absent', \Carbon\Carbon::parse($date)->format('d-m-Y')];
+    }
+
+    $partiallyAbsentArray = array();
+    foreach ($partiallyAbsent as $key => $value) {
+
+      if ($value->attendance[0]->action == 'Check In')
+      $action = 'Missing Check Out';
+      elseif ($value->attendance[0]->action == 'Check Out')
+      $action = 'Missing Check In';
+
+      $partiallyAbsentArray[$key] = [$group->group_name, $value->name, $value->email, $action,
+       \Carbon\Carbon::parse($value->attendance[0]->created_at)->format('d-m-Y')];
+    }
+
+    $csv = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject);
+    $csv->insertOne(['Group','Name','Email','Type','Date']);
+
+    foreach ($partiallyAbsentArray as $value) {
+      $csv->insertOne($value);
+    }
+
+    foreach ($totallyAbsentArray as $value) {
+       $csv->insertOne($value);
+     }
+
+    $csv->output('absence_sheet_'.Carbon::now()->format('dmy_his').'.csv');
+
   }
 
     /**

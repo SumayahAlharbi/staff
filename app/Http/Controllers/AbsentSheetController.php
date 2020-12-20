@@ -37,30 +37,29 @@ class AbsentSheetController extends Controller
 
       $totallyAbsent = User::GroupUsers()
       ->whereDoesntHave('attendance', function ($query) use ($date, $group_id) {
-      $query->select(DB::raw("COUNT(*) count, day(created_at) day"))
-              ->where('created_at', '=', $date)
-              ->where('group_id', '=', $group_id)
-              ->havingRaw('COUNT(*) = 2') // users must have two attendance records daily (check in, check out)
-              ->groupBy('day');
-              })->get();
-          //  })->simplePaginate(15);
+        $query->whereDate('created_at', '=', $date)
+        ->where('group_id', '=', $group_id)
+        ->groupBy('user_id');
+      })->get();
+      //  })->simplePaginate(15);
 
       $partiallyAbsent = User::GroupUsers()
       ->with('attendance')
       ->whereHas('attendance', function ($query) use ($date, $group_id) {
-      $query->select(DB::raw("COUNT(*) count, day(created_at) day"))
-            ->whereDate('created_at', '=', $date)
-            ->where('group_id', '=', $group_id)
-            ->havingRaw('COUNT(*) = 1') // users with one attendance records daily
-            ->groupBy('day');
-          })->get();
-          //})->simplePaginate(15);
+        $query->whereDate('created_at', '=', $date)
+        ->where('group_id', '=', $group_id)
+        ->having(DB::raw('count(*)'), '=', 1) // users with one attendance records daily
+        ->groupBy('user_id');
+        //->havingRaw('COUNT(*) = 1');
+        //->having(DB::raw('count(*)'), '=', 1);
+      })->get();
+      //})->simplePaginate(15);
 
       foreach ($totallyAbsent as $key => $value) {
         foreach ($partiallyAbsent as $key2 => $value2) {
-        if ( $value->id == $value2->id)
-         unset($totallyAbsent[$key]);
-      }
+          if ( $value->id == $value2->id)
+          unset($totallyAbsent[$key]);
+        }
       }
 
       /*$absentsheet = User::GroupUsers()
@@ -79,7 +78,6 @@ class AbsentSheetController extends Controller
                   ->havingRaw('COUNT(*) = 2') // users must have two attendance records daily (check in, check out)
                   ->groupBy('day');
           })->get();*/
-
 
       $userGroups = Auth::user()->group;
       $group = Group::where('id','=',$group_id)->get();

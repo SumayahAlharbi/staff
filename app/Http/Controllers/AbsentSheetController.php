@@ -37,7 +37,8 @@ class AbsentSheetController extends Controller
 
       $totallyAbsent = User::GroupUsers()
       ->whereDoesntHave('attendance', function ($query) use ($date, $group_id) {
-        $query->whereDate('created_at', '=', $date)
+        $query->select(DB::raw("COUNT(*) count, user_id"))
+        ->whereDate('created_at', '=', $date)
         ->where('group_id', '=', $group_id)
         ->groupBy('user_id');
       })->get();
@@ -46,9 +47,10 @@ class AbsentSheetController extends Controller
       $partiallyAbsent = User::GroupUsers()
       ->with('attendance')
       ->whereHas('attendance', function ($query) use ($date, $group_id) {
-        $query->whereDate('created_at', '=', $date)
+        $query->select(DB::raw("COUNT(*) count, user_id"))
+        ->whereDate('created_at', '=', $date)
         ->where('group_id', '=', $group_id)
-        ->having(DB::raw('count(*)'), '=', 1) // users with one attendance records daily
+        ->havingRaw('COUNT(*) = 1') // users with one attendance records daily
         ->groupBy('user_id');
         //->havingRaw('COUNT(*) = 1');
         //->having(DB::raw('count(*)'), '=', 1);

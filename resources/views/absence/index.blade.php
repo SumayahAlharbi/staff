@@ -41,23 +41,26 @@
   </form>
 </div>
 </div>
-
 @isset($partiallyAbsent)
-{{--<div class="col-md-10"> Missing <b>Check In</b> or <b>Check Out</b> </div>--}}
+<div role="group" class="row mb-2 mt-2 ml-2">
+      <h5 class="mr-3"><span class="badge badge-secondary"> Date: {{\Carbon\Carbon::parse($date)->format('d-m-Y')}}</span></h5>
+      <h5><span class="badge badge-secondary"> Group: {{$group->group_name}}</span></h5>
+    </div>
+
   <table class="table table-striped">
     <thead>
         <tr>
-          <td>Group</td>
+          {{--<td>Group</td>--}}
           <td>Name</td>
           <td>Email</td>
           <td>Type</td>
-          <td>Date</td>
+          {{--<td>Date</td>--}}
         </tr>
     </thead>
     <tbody>
       @foreach($partiallyAbsent as $absentsheet)
         <tr>
-          <td>{{$group->group_name}}</td>
+          {{--<td>{{$group->group_name}}</td>--}}
           <td>{{$absentsheet->name}}</td>
           <td>{{$absentsheet->email}}</td>
           <td>
@@ -67,18 +70,18 @@
             Missing Check In
             @endif
           </td>
-          <td>{{ \Carbon\Carbon::parse($absentsheet->attendance[0]->created_at)->format('d-m-Y') }}</td>
+          {{--<td>{{ \Carbon\Carbon::parse($absentsheet->attendance[0]->created_at)->format('d-m-Y') }}</td>--}}
       </tr>
         @endforeach
         @foreach($totallyAbsent as $key => $value)
           <tr>
-            <td>{{$group->group_name}}</td>
+            {{--<td>{{$group->group_name}}</td>--}}
             <td>{{$value->name}}</td>
             <td>{{$value->email}}</td>
             <td>
             Absent
             </td>
-            <td>{{ \Carbon\Carbon::parse($date)->format('d-m-Y') }}</td>
+            {{--<td>{{ \Carbon\Carbon::parse($date)->format('d-m-Y') }}</td>--}}
         </tr>
           @endforeach
       </tbody>

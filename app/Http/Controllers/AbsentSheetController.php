@@ -118,10 +118,7 @@ class AbsentSheetController extends Controller
 
           $partiallyAbsent = DB::table('attendance_sheet')
           ->select('users.name','users.email','attendance_sheet.action')
-          //->addSelect(DB::raw('COUNT(*) = 1 as count'))
           ->join('users', 'users.id', '=', 'attendance_sheet.user_id')
-          ->join('group_to_user', 'group_to_user.user_id', '=', 'attendance_sheet.user_id')
-          ->join('groups', 'groups.id', '=', 'attendance_sheet.group_id')
           ->whereDate('attendance_sheet.created_at', '=', $date)
           ->where('attendance_sheet.group_id', '=', $group_id)
           ->havingRaw('COUNT(*) = 1')

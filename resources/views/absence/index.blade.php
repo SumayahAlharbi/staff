@@ -35,7 +35,8 @@
       </div>
     </div>
     <button type="submit" class="btn btn-primary">Search</button>
-    @if(isset($partiallyAbsent) OR isset($totallyAbsent))
+    {{--@if(isset($partiallyAbsent) OR isset($totallyAbsent))--}}
+    @if(isset($partiallyAbsent))
     <a href="{{route('absencesheet.export', ['group_id' => $group->id, 'date'=> $date])}}" class="btn btn-success">Export</a>
     @endif
   </form>
@@ -43,8 +44,8 @@
 </div>
 @isset($partiallyAbsent)
 <div role="group" class="row mb-2 mt-2 ml-2">
-      <h5 class="mr-3"><span class="badge badge-secondary"> Date: {{\Carbon\Carbon::parse($date)->format('d-m-Y')}}</span></h5>
-      <h5><span class="badge badge-secondary"> Group: {{$group->group_name}}</span></h5>
+      <h5 class="mr-3"><span class="badge badge-secondary"> Group: {{$group_name}}</span></h5>
+      <h5><span class="badge badge-secondary"> Date: {{\Carbon\Carbon::parse($date)->format('d-m-Y')}}</span></h5>
     </div>
 
   <table class="table table-striped">
@@ -64,26 +65,15 @@
           <td>{{$absentsheet->name}}</td>
           <td>{{$absentsheet->email}}</td>
           <td>
-            @if ($absentsheet->attendance[0]->action == 'Check In')
+            @if ($absentsheet->action == 'Check In')
             Missing Check Out
-            @elseif ($absentsheet->attendance[0]->action == 'Check Out')
+            @elseif ($absentsheet->action == 'Check Out')
             Missing Check In
             @endif
           </td>
           {{--<td>{{ \Carbon\Carbon::parse($absentsheet->attendance[0]->created_at)->format('d-m-Y') }}</td>--}}
       </tr>
         @endforeach
-        @foreach($totallyAbsent as $key => $value)
-          <tr>
-            {{--<td>{{$group->group_name}}</td>--}}
-            <td>{{$value->name}}</td>
-            <td>{{$value->email}}</td>
-            <td>
-            Absent
-            </td>
-            {{--<td>{{ \Carbon\Carbon::parse($date)->format('d-m-Y') }}</td>--}}
-        </tr>
-          @endforeach
       </tbody>
       {{--<tfoot>
           <tr>

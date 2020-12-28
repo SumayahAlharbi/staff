@@ -35,7 +35,7 @@ class AbsentSheetController extends Controller
       $date = $request->input('date');
       $group_id = $request->input('group_id');
 
-      $totallyAbsent = User::GroupUsers()
+      /*$totallyAbsent = User::GroupUsers()
       ->whereDoesntHave('attendance', function ($query) use ($date, $group_id) {
         $query->select(DB::raw("COUNT(*) count, user_id"))
         ->whereDate('created_at', '=', $date)
@@ -44,7 +44,42 @@ class AbsentSheetController extends Controller
       })->get();
       //  })->simplePaginate(15);
 
-      $partiallyAbsent = User::GroupUsers()
+
+      $totallyAbsentTest = DB::table('users')
+      ->select('users.name','users.email')
+      //->addSelect(DB::raw('COUNT(*) = 0 as count'))
+      ->join('attendance_sheet', 'attendance_sheet.user_id', '=', 'users.id')
+      ->join('group_to_user', 'group_to_user.user_id', '=', 'attendance_sheet.user_id')
+      ->join('groups', 'groups.id', '=', 'group_to_user.group_id')
+      ->where('group_to_user.group_id', '=', $group_id)
+      ->whereNotIn('users.id', function($query) use ($date, $group_id) {
+        $query->select('attendance_sheet.user_id')->from('attendance_sheet')
+        ->whereDate('attendance_sheet.created_at', '=', $date)
+        ->where('attendance_sheet.group_id', '=', $group_id);
+      })->get();*/
+
+      //->havingRaw('COUNT(*) = 0')
+      //->groupBy('users.name','users.email')
+      //->get();
+
+      //return $totallyAbsentTest;
+
+      /*
+      $partiallyAbsentTest = DB::table('attendance_sheet')
+      ->select('users.name','users.email','attendance_sheet.action')
+      //->addSelect(DB::raw('COUNT(*) = 1 as count'))
+      ->join('users', 'users.id', '=', 'attendance_sheet.user_id')
+      ->join('group_to_user', 'group_to_user.user_id', '=', 'attendance_sheet.user_id')
+      ->join('groups', 'groups.id', '=', 'attendance_sheet.group_id')
+      ->whereDate('attendance_sheet.created_at', '=', $date)
+      ->where('attendance_sheet.group_id', '=', $group_id)
+      ->havingRaw('COUNT(*) = 1')
+      ->groupBy('users.name','users.email','attendance_sheet.action')
+      ->get();
+
+    return $totallyAbsentTest;*/
+
+      /*$partiallyAbsent = User::GroupUsers()
       ->with('attendance')
       ->whereHas('attendance', function ($query) use ($date, $group_id) {
         $query->select(DB::raw("COUNT(*) count, user_id"))
@@ -62,7 +97,7 @@ class AbsentSheetController extends Controller
           if ( $value->id == $value2->id)
           unset($totallyAbsent[$key]);
         }
-      }
+      }*/
 
       /*$absentsheet = User::GroupUsers()
       ->with('attendance')
@@ -81,8 +116,21 @@ class AbsentSheetController extends Controller
                   ->groupBy('day');
           })->get();*/
 
+          $partiallyAbsent = DB::table('attendance_sheet')
+          ->select('users.name','users.email','attendance_sheet.action')
+          //->addSelect(DB::raw('COUNT(*) = 1 as count'))
+          ->join('users', 'users.id', '=', 'attendance_sheet.user_id')
+          ->join('group_to_user', 'group_to_user.user_id', '=', 'attendance_sheet.user_id')
+          ->join('groups', 'groups.id', '=', 'attendance_sheet.group_id')
+          ->whereDate('attendance_sheet.created_at', '=', $date)
+          ->where('attendance_sheet.group_id', '=', $group_id)
+          ->havingRaw('COUNT(*) = 1')
+          ->groupBy('users.name','users.email','attendance_sheet.action')
+          ->get();
+
       $userGroups = Auth::user()->group;
-      $group = Group::where('id','=',$group_id)->get();
-      return view('absence.index', compact('partiallyAbsent', 'userGroups', 'totallyAbsent','date','group'));
+      $group_name = Group::where('id','=',$group_id)->value('group_name');
+      //return view('absence.index', compact('partiallyAbsent', 'userGroups', 'totallyAbsent','date','group_name'));
+      return view('absence.index', compact('partiallyAbsent', 'userGroups','date','group_name'));
     }
 }

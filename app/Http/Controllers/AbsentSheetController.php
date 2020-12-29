@@ -85,6 +85,7 @@ class AbsentSheetController extends Controller
 
       $userGroups = Auth::user()->group;
       $group_name = Group::where('id','=',$group_id)->value('group_name');
-      return view('absence.index', compact('partiallyAbsent', 'userGroups', 'totallyAbsent','date','group_name'));
+      $group_id = Group::where('id','=',$group_id)->value('id');
+      return view('absence.index', compact('partiallyAbsent', 'userGroups', 'totallyAbsent','date','group_name','group_id'));
     }
 }

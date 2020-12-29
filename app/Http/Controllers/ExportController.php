@@ -63,39 +63,26 @@ class ExportController extends Controller
     $date = $date;
     $group_id = $group_id;
 
-    $totallyAbsent = User::GroupUsers()
-    ->whereDoesntHave('attendance', function ($query) use ($date, $group_id) {
-      $query->select(DB::raw("COUNT(*) count, user_id"))
-      ->whereDate('created_at', '=', $date)
-      ->where('group_id', '=', $group_id)
-      ->groupBy('user_id');
+    $totallyAbsent = DB::table('users')
+     ->select('users.name','users.email')
+     ->join('group_to_user', 'group_to_user.user_id', '=', 'users.id')
+     ->where('group_to_user.group_id', '=', $group_id)
+     ->whereNotIn('users.id', function($query) use ($date, $group_id) {
+      $query->select('attendance_sheet.user_id')->from('attendance_sheet')
+      ->whereDate('attendance_sheet.created_at', '=', $date)
+      ->where('attendance_sheet.group_id', '=', $group_id);
     })->get();
 
-    $partiallyAbsent = User::GroupUsers()
-    ->with('attendance')
-    ->whereHas('attendance', function ($query) use ($date, $group_id) {
-      $query->select(DB::raw("COUNT(*) count, user_id"))
-      ->whereDate('created_at', '=', $date)
-      ->where('group_id', '=', $group_id)
-      ->havingRaw('COUNT(*) = 1') // users with one attendance records daily
-      ->groupBy('user_id');
-    })->get();
+    $partiallyAbsent = DB::table('attendance_sheet')
+      ->select('users.name','users.email','attendance_sheet.action')
+      ->join('users', 'users.id', '=', 'attendance_sheet.user_id')
+      ->whereDate('attendance_sheet.created_at', '=', $date)
+      ->where('attendance_sheet.group_id', '=', $group_id)
+      ->havingRaw('COUNT(*) = 1')
+      ->groupBy('users.name','users.email','attendance_sheet.action')
+      ->get();
 
     $group = Group::select('group_name')->where('id','=',$group_id)->first();
-
-    foreach ($totallyAbsent as $key => $value) {
-      foreach ($partiallyAbsent as $key2 => $value2) {
-          if ( $value->id == $value2->id)
-           unset($totallyAbsent[$key]);
-        }
-      }
-
-    foreach ($totallyAbsent as $key => $value) {
-        unset($value->id);
-        unset($value->email_verified_at);
-        unset($value->created_at);
-        unset($value->updated_at);
-    }
 
     $totallyAbsentArray = array();
     foreach ($totallyAbsent as $key => $value) {
@@ -105,15 +92,13 @@ class ExportController extends Controller
     $partiallyAbsentArray = array();
     foreach ($partiallyAbsent as $key => $value) {
 
-      if ($value->attendance[0]->action == 'Check In')
+      if ($value->action == 'Check In')
       $action = 'Missing Check Out';
-      elseif ($value->attendance[0]->action == 'Check Out')
+      elseif ($value->action == 'Check Out')
       $action = 'Missing Check In';
 
       $partiallyAbsentArray[$key] = [$value->name, $value->email, $action];
     }
-
-
 
     $csv = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject);
     $csv->insertOne(['Date',\Carbon\Carbon::parse($date)->format('d-m-Y'),'Group',$group->group_name]);

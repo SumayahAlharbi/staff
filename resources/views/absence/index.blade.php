@@ -36,7 +36,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Search</button>
     @if(isset($partiallyAbsent) OR isset($totallyAbsent))
-    <a href="{{route('absencesheet.export', ['group_id' => $group->id, 'date'=> $date])}}" class="btn btn-success">Export</a>
+    <a href="{{route('absencesheet.export', ['group_id' => $group_id, 'date'=> $date])}}" class="btn btn-success">Export</a>
     @endif
   </form>
 </div>

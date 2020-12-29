@@ -35,8 +35,7 @@
       </div>
     </div>
     <button type="submit" class="btn btn-primary">Search</button>
-    {{--@if(isset($partiallyAbsent) OR isset($totallyAbsent))--}}
-    @if(isset($partiallyAbsent))
+    @if(isset($partiallyAbsent) OR isset($totallyAbsent))
     <a href="{{route('absencesheet.export', ['group_id' => $group->id, 'date'=> $date])}}" class="btn btn-success">Export</a>
     @endif
   </form>
@@ -61,7 +60,6 @@
     <tbody>
       @foreach($partiallyAbsent as $absentsheet)
         <tr>
-          {{--<td>{{$group->group_name}}</td>--}}
           <td>{{$absentsheet->name}}</td>
           <td>{{$absentsheet->email}}</td>
           <td>
@@ -71,9 +69,17 @@
             Missing Check In
             @endif
           </td>
-          {{--<td>{{ \Carbon\Carbon::parse($absentsheet->attendance[0]->created_at)->format('d-m-Y') }}</td>--}}
       </tr>
         @endforeach
+        @foreach($totallyAbsent as $key => $value)
+          <tr>
+            <td>{{$value->name}}</td>
+            <td>{{$value->email}}</td>
+            <td>
+            Absent
+            </td>
+        </tr>
+          @endforeach
       </tbody>
       {{--<tfoot>
           <tr>
@@ -86,44 +92,6 @@
       </tfoot>--}}
       </table>
   @endif
-
-
-{{--@isset($totallyAbsent)
-<div class="col-md-10"> Absent members</div>
-<table class="table table-striped">
-  <thead>
-      <tr>
-        <td>Group</td>
-        <td>Name</td>
-        <td>Email</td>
-        <td>Type</td>
-        <td>Date</td>
-      </tr>
-  </thead>
-  <tbody>
-  @foreach($totallyAbsent as $key => $value)
-    <tr>
-      <td>{{$group->group_name}}</td>
-      <td>{{$value->name}}</td>
-      <td>{{$value->email}}</td>
-      <td>
-      Absent
-      </td>
-      <td>{{ \Carbon\Carbon::parse($date)->format('d-m-Y') }}</td>
-  </tr>
-    @endforeach
-</tbody>
-<tfoot>
-    <tr>
-        <td colspan="6">
-            <div class="text-right">
-                <ul> {!! $totallyAbsent->appends(['group_id' => $group->id, 'date' => $date])->render() !!} </ul>
-            </div>
-        </td>
-    </tr>
-</tfoot>
-</table>
-@endif--}}
 
 @endcan
 </div>

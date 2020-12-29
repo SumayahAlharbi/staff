@@ -29,7 +29,7 @@
       </select>
       </div>
       <div class="form-group col-md-4">
-          @csrf
+          
           <label for="Date">Date</label>
           <input type="date" class="form-control" name="date" required/>
       </div>

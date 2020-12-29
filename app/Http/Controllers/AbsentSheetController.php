@@ -27,9 +27,17 @@ class AbsentSheetController extends Controller
 
     public function absence(Request $request)
     {
+      $userGroups = Auth::user()->group;
+        foreach ($userGroups as $userGroup) {
+          $userGroupIDs[] =  $userGroup->id;
+        };
       $request->validate([
-              'group_id' => 'required_unless:none,0',
+             // 'group_id' => 'required_unless:none,0',
               'date' => 'required',
+              'group_id' => [
+                'required',
+                Rule::in($userGroupIDs),
+              ],
         ]);
 
       $date = $request->input('date');

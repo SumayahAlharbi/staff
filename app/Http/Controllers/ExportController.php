@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AttendanceSheet;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 use App\User;
 use Auth;
 use CSVReport;
@@ -60,6 +61,25 @@ class ExportController extends Controller
 
   public function downloadAbsencesheet($group_id, $date)
   {
+
+    /* Start of User Group Validation  */
+    $userGroups = Auth::user()->group;
+      foreach ($userGroups as $userGroup) {
+        $userGroupIDs[] =  $userGroup->id;
+      };
+      $data = [
+      'group_id' => $group_id,
+      'date' => $date
+    ];
+    $validator = Validator::make($data, [
+      'date' => 'required',
+      'group_id' => ['required', Rule::in($userGroupIDs)]]);
+    /* END of User Group Validation  */
+
+    if ($validator->fails()) {
+      return back();
+    }
+    else {
     $date = $date;
     $group_id = $group_id;
 
@@ -114,7 +134,8 @@ class ExportController extends Controller
      }
 
     $csv->output('absence_sheet_'.Carbon::now()->format('dmy_his').'.csv');
-
+  }
+  
   }
 
     /**

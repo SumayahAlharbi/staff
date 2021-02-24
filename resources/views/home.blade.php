@@ -46,11 +46,14 @@
                       <p>
                         Location accuracy:<br/>
                         <span id="currentAcc">0</span> M
-                      </p> --}}
+                      </p>
                       <p>
                         Are we here?<br/>
                         <span id="message"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>
-
+                      </p> --}}
+                      <p> Attendance Enabled Range<br/><br/>
+                        <span id="message"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>
+                        <img src="{{ secure_url('images/allowed_location.png') }}" class="img-fluid">
                       </p>
                       <p>
                         <!-- Tutorial -->
@@ -117,6 +120,7 @@
                           @csrf
                           <button type="submit" name="Action" value="Check In" onClick="return checkInValidation()" class="btn btn-primary btn-lg btn-block p-5">Check In</button>
                           <button type="submit" name="Action" value="Check Out" onClick="return checkOutValidation()" class="btn btn-secondary btn-lg btn-block p-5">Check Out</button>
+                          </br>
                         <div class="form-group">
                             <label for="FormControlSelect">Group</label>
                             <select required class="form-control" name="group_id">
@@ -134,7 +138,7 @@
                       </p>
                       {{-- <span class="badge badge-secondary"> Attendance available for 15  minutes every hour </span> --}}
                       <p>
-                        <div id="mapholder"></div>
+                        <div id="mapholder" hidden></div>
                       </p>
                     </div>
                     <p>Your latest attendance:</p>

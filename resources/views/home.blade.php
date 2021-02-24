@@ -114,10 +114,10 @@
                       <p>
                         <div id="attendBtn">
                         <form method="post" action="{{ route('attendancesheet.store') }}">
+                          <meta name="csrf-token" content="{{ csrf_token() }}">
                           @csrf
-                        <button type="submit" name="Action" value="Check In" class="btn btn-primary btn-lg btn-block p-5" onclick="return confirm('Are you sure to check in?');">Check In</button>
-                        <button type="submit" name="Action" value="Check Out" class="btn btn-secondary btn-lg btn-block p-5" onclick="return confirm('Are you sure to check out?');">Check Out</button>
-
+                          <button type="submit" name="Action" value="Check In" onClick="return checkInValidation()" class="btn btn-primary btn-lg btn-block p-5">Check In</button>
+                          <button type="submit" name="Action" value="Check Out" onClick="return checkOutValidation()" class="btn btn-secondary btn-lg btn-block p-5">Check Out</button>
                         <div class="form-group">
                             <label for="FormControlSelect">Group</label>
                             <select required class="form-control" name="group_id">
@@ -129,7 +129,6 @@
                                 @endforeach
                             </select>
                           </div>
-
                         <div id="coords"></div>
                       </form>
                     </div>
@@ -166,4 +165,5 @@
 {{-- @push('geolocation') --}}
 <script type="text/javascript" src="{{ secure_url('js/geolocation.js') }}"></script>
 {{-- @endpush --}}
+<script type="text/javascript" src="{{ secure_url('js/attendanceAlert.js') }}"></script>
 @endsection

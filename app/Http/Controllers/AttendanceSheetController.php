@@ -41,7 +41,7 @@ class AttendanceSheetController extends Controller
             'date' => request('date'),
             'type' => request('type'),
         ]);
-        
+
         return view('attendance.absent', compact('absentSheets','date','type'));
 
     }
@@ -95,7 +95,11 @@ class AttendanceSheetController extends Controller
             $AttendanceSheet->action = $request->Action;
             $AttendanceSheet->coords = $request->coords;
             $AttendanceSheet->save();
-            return redirect('home')->with('success', 'Attendance has been taken');
+            if ($request->Action == 'Check In'){
+              return redirect('home')->with('success', 'You have successfully check in');
+            }else{
+              return redirect('home')->with('success', 'You have successfully check out');
+            }
         }
         else {
             return redirect('home')->with('danger', 'Attendance has been taken already!');

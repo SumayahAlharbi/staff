@@ -114,7 +114,6 @@
                       <p>
                         <div id="attendBtn">
                         <form method="post" action="{{ route('attendancesheet.store') }}">
-                          <meta name="csrf-token" content="{{ csrf_token() }}">
                           @csrf
                           <button type="submit" name="Action" value="Check In" onClick="return checkInValidation()" class="btn btn-primary btn-lg btn-block p-5">Check In</button>
                           <button type="submit" name="Action" value="Check Out" onClick="return checkOutValidation()" class="btn btn-secondary btn-lg btn-block p-5">Check Out</button>

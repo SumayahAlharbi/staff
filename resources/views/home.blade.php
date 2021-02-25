@@ -16,6 +16,11 @@
                       {{ session()->get('success') }}
                     </div><br />
                   @endif
+                  @if(session()->get('primary'))
+                  <div class="alert alert-primary">
+                    {{ session()->get('primary') }}
+                  </div><br />
+                  @endif
                   @if(session()->get('danger'))
                   <div class="alert alert-danger">
                     {{ session()->get('danger') }}

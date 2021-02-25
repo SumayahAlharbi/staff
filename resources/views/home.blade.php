@@ -52,13 +52,12 @@
                         Location accuracy:<br/>
                         <span id="currentAcc">0</span> M
                       </p>
-                      <p>
-                        Are we here?<br/>
-                        <span id="message"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>
-                      </p> --}}
                       <p> Attendance Enabled Range<br/><br/>
                         <span id="message"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>
                         <img src="{{ secure_url('images/allowed_location.png') }}" class="img-fluid">
+                      </p> --}}
+                      <p>
+                        <span id="message"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>
                       </p>
                       <p>
                         <!-- Tutorial -->

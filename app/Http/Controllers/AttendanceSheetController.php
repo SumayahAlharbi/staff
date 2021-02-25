@@ -82,28 +82,50 @@ class AttendanceSheetController extends Controller
         ],
     ]);
 
-        // Check user latest attendance - 5 min role
-        $user = Auth::user();
-        $UserAttendance = AttendanceSheet::where('user_id', '=', $user->id)
-        ->where('created_at', '>', Carbon::now()->subMinutes(5)->toDateTimeString())
-        ->get();
+        $newAction = $request->Action;
 
-        if ($UserAttendance->isEmpty()) {
+        // Check user latest attendance - 5 min with diff action role
+        $user = Auth::user();
+        /*$UserAttendance = AttendanceSheet::where('user_id', '=', $user->id)
+        ->where('created_at', '>', Carbon::now()->subMinutes(5)->toDateTimeString())
+        ->get();*/
+
+        $lastAction = AttendanceSheet::select('action')
+        ->where('user_id', '=', $user->id)
+        ->where('created_at', '>', Carbon::now()->subMinutes(5)->toDateTimeString())
+        ->orderBy('created_at', 'desc')->first();
+
+        if ($lastAction != null)
+        {
+          if ($lastAction->action != $newAction) {
             $AttendanceSheet = new \App\AttendanceSheet;
             $AttendanceSheet->user_id = Auth::user()->id;
             $AttendanceSheet->group_id = $request->group_id;
-            $AttendanceSheet->action = $request->Action;
+            $AttendanceSheet->action = $newAction;
             $AttendanceSheet->coords = $request->coords;
             $AttendanceSheet->save();
-            if ($request->Action == 'Check In'){
+            if ($newAction == 'Check In'){
               return redirect('home')->with('success', 'You have successfully check in');
             }else{
               return redirect('home')->with('success', 'You have successfully check out');
             }
-        }
-        else {
+          }else{
             return redirect('home')->with('danger', 'Attendance has been taken already!');
+          }
+        }else{
+          $AttendanceSheet = new \App\AttendanceSheet;
+          $AttendanceSheet->user_id = Auth::user()->id;
+          $AttendanceSheet->group_id = $request->group_id;
+          $AttendanceSheet->action = $newAction;
+          $AttendanceSheet->coords = $request->coords;
+          $AttendanceSheet->save();
+          if ($newAction == 'Check In'){
+            return redirect('home')->with('success', 'You have successfully check in');
+          }else{
+            return redirect('home')->with('success', 'You have successfully check out');
+          }
         }
+
     }
 
     /**

@@ -12,7 +12,7 @@ function checkInValidation(){
   var today = new Date();
   var hour = today.getHours();
   if (hour >= 12){ // show alert message and check if user confirm
-    var r = confirm("Are you sure to check in now!");
+    var r = confirm("Are you sure to check in now?");
     if (r == true) {
     return true; // confirm -> store user attendance
     } else {
@@ -28,7 +28,7 @@ function checkOutValidation(){
   var today = new Date();
   var hour = today.getHours();
   if (hour < 12){
-    var r = confirm("Are you sure to check out now!");
+    var r = confirm("Are you sure to check out now?");
     if (r == true) {
     return true;
     } else {

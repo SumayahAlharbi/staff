@@ -16,9 +16,14 @@
                       {{ session()->get('success') }}
                     </div><br />
                   @endif
-                  @if(session()->get('danger'))
-                  <div class="alert alert-danger">
-                    {{ session()->get('danger') }}
+                  @if(session()->get('checkIn'))
+                  <div class="alert alert-primary">
+                    {{ session()->get('checkIn') }}
+                  </div><br />
+                  @endif
+                  @if(session()->get('checkOut'))
+                  <div class="alert alert-secondary">
+                    {{ session()->get('checkOut') }}
                   </div><br />
                   @endif
                   @if ($errors->any())

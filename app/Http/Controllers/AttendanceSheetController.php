@@ -105,12 +105,17 @@ class AttendanceSheetController extends Controller
             $AttendanceSheet->coords = $request->coords;
             $AttendanceSheet->save();
             if ($newAction == 'Check In'){
-              return redirect('home')->with('success', 'You have successfully check in');
+              return redirect('home')->with('success', 'Check in successful 👍');
             }else{
-              return redirect('home')->with('success', 'You have successfully check out');
+              return redirect('home')->with('success', 'Check out successful 👋');
             }
           }else{
-            return redirect('home')->with('danger', 'Attendance has been taken already!');
+            if ($newAction == 'Check In'){
+              return redirect('home')->with('checkIn', 'You already checked in!');
+            }else{
+              return redirect('home')->with('checkOut', 'You already checked out!');
+            }
+
           }
         }else{
           $AttendanceSheet = new \App\AttendanceSheet;
@@ -120,9 +125,9 @@ class AttendanceSheetController extends Controller
           $AttendanceSheet->coords = $request->coords;
           $AttendanceSheet->save();
           if ($newAction == 'Check In'){
-            return redirect('home')->with('success', 'You have successfully check in');
+            return redirect('home')->with('success', 'Check in successful 👍');
           }else{
-            return redirect('home')->with('success', 'You have successfully check out');
+            return redirect('home')->with('success', 'Check out successful 👋');
           }
         }
 

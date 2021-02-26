@@ -16,9 +16,14 @@
                       {{ session()->get('success') }}
                     </div><br />
                   @endif
-                  @if(session()->get('danger'))
-                  <div class="alert alert-danger">
-                    {{ session()->get('danger') }}
+                  @if(session()->get('checkIn'))
+                  <div class="alert alert-primary">
+                    {{ session()->get('checkIn') }}
+                  </div><br />
+                  @endif
+                  @if(session()->get('checkOut'))
+                  <div class="alert alert-secondary">
+                    {{ session()->get('checkOut') }}
                   </div><br />
                   @endif
                   @if ($errors->any())
@@ -46,11 +51,13 @@
                       <p>
                         Location accuracy:<br/>
                         <span id="currentAcc">0</span> M
+                      </p>
+                      <p> Attendance Enabled Range<br/><br/>
+                        <span id="message"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>
+                        <img src="{{ secure_url('images/allowed_location.png') }}" class="img-fluid">
                       </p> --}}
                       <p>
-                        Are we here?<br/>
                         <span id="message"><i id="spinner" class="fa fa-spinner fa-pulse"></i></span>
-
                       </p>
                       <p>
                         <!-- Tutorial -->
@@ -115,9 +122,9 @@
                         <div id="attendBtn">
                         <form method="post" action="{{ route('attendancesheet.store') }}">
                           @csrf
-                        <button type="submit" name="Action" value="Check In" class="btn btn-primary btn-lg btn-block p-5">Check In</button>
-                        <button type="submit" name="Action" value="Check Out" class="btn btn-secondary btn-lg btn-block p-5">Check Out</button>
-
+                          <button type="submit" name="Action" value="Check In" onClick="return checkInValidation()" class="btn btn-primary btn-lg btn-block p-5">Check In</button>
+                          <button type="submit" name="Action" value="Check Out" onClick="return checkOutValidation()" class="btn btn-secondary btn-lg btn-block p-5">Check Out</button>
+                          </br>
                         <div class="form-group">
                             <label for="FormControlSelect">Group</label>
                             <select required class="form-control" name="group_id">
@@ -129,14 +136,13 @@
                                 @endforeach
                             </select>
                           </div>
-
                         <div id="coords"></div>
                       </form>
                     </div>
                       </p>
                       {{-- <span class="badge badge-secondary"> Attendance available for 15  minutes every hour </span> --}}
                       <p>
-                        <div id="mapholder"></div>
+                        <div id="mapholder" hidden></div>
                       </p>
                     </div>
                     <p>Your latest attendance:</p>
@@ -166,4 +172,5 @@
 {{-- @push('geolocation') --}}
 <script type="text/javascript" src="{{ secure_url('js/geolocation.js') }}"></script>
 {{-- @endpush --}}
+<script type="text/javascript" src="{{ secure_url('js/attendanceAlert.js') }}"></script>
 @endsection

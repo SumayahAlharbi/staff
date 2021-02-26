@@ -54,11 +54,11 @@
                                   <a class="nav-link" href="{{ route('attendance') }}">Attendance Sheet</a>
                                   </li>
                       @endcan
-                      @can('view attendance sheet')
+                      <!-- @can('view attendance sheet')
                       <li class="nav-item">
                                   <a class="nav-link" href="{{ route('absence') }}">Absence Sheet</a>
                                   </li>
-                      @endcan
+                      @endcan -->
                       @can('edit users')
                       <li class="nav-item">
                  <a class="nav-link" href="{{ route('users.index') }}">Users</a>

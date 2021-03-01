@@ -38,11 +38,6 @@ Route::get('/attendance', 'AttendanceSheetController@index')->name('attendance')
 Route::get('/absent', 'AttendanceSheetController@absent')->name('absent')->middleware('permission:view attendance sheet');
 Route::post('/absent', 'AttendanceSheetController@absent')->name('absent')->middleware('permission:view attendance sheet');
 
-// Abcence Report
-Route::get('/absence', 'AbsentSheetController@index')->name('absence')->middleware('permission:view attendance sheet');
-Route::get('/absencesheet', 'AbsentSheetController@absence')->name('absencesheet')->middleware('permission:view attendance sheet');
-Route::get('/absencesheet/download/{group_id}/{date}','ExportController@downloadAbsencesheet')->name('absencesheet.export')->middleware('permission:export');
-
 // Export Attendance Sheet
 Route::post('export/', 'ExportController@attendancesheet')->name('attendancesheet.export')->middleware('permission:export');
 // Show User Profile

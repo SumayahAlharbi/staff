@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\AttendanceSheet;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Validator;
 use App\User;
 use Auth;
 use CSVReport;
 use Carbon\Carbon;
-use DB;
-use App\Group;
 
 class ExportController extends Controller
 {
@@ -57,85 +54,6 @@ class ExportController extends Controller
     CSVReport::of($title, $meta, $queryBuilder, $columns)
     ->showNumColumn(false)
     ->download($filename);
-  }
-
-  public function downloadAbsencesheet($group_id, $date)
-  {
-
-    /* Start of User Group Validation  */
-    $userGroups = Auth::user()->group;
-      foreach ($userGroups as $userGroup) {
-        $userGroupIDs[] =  $userGroup->id;
-      };
-      $data = [
-      'group_id' => $group_id,
-      'date' => $date
-    ];
-    $validator = Validator::make($data, [
-      'date' => 'required',
-      'group_id' => ['required', Rule::in($userGroupIDs)]]);
-    /* END of User Group Validation  */
-
-    if ($validator->fails()) {
-      return back();
-    }
-    else {
-    $date = $date;
-    $group_id = $group_id;
-
-    $totallyAbsent = DB::table('users')
-     ->select('users.name','users.email')
-     ->join('group_to_user', 'group_to_user.user_id', '=', 'users.id')
-     ->where('group_to_user.group_id', '=', $group_id)
-     ->whereNotIn('users.id', function($query) use ($date, $group_id) {
-      $query->select('attendance_sheet.user_id')->from('attendance_sheet')
-      ->whereDate('attendance_sheet.created_at', '=', $date)
-      ->where('attendance_sheet.group_id', '=', $group_id);
-    })->get();
-
-    $partiallyAbsent = DB::table('attendance_sheet')
-      ->select('users.name','users.email','attendance_sheet.action')
-      ->join('users', 'users.id', '=', 'attendance_sheet.user_id')
-      ->whereDate('attendance_sheet.created_at', '=', $date)
-      ->where('attendance_sheet.group_id', '=', $group_id)
-      ->havingRaw('COUNT(*) = 1')
-      ->groupBy('users.name','users.email','attendance_sheet.action')
-      ->get();
-
-    $group = Group::select('group_name')->where('id','=',$group_id)->first();
-
-    $totallyAbsentArray = array();
-    foreach ($totallyAbsent as $key => $value) {
-      $totallyAbsentArray[$key] = [$value->name, $value->email,'Absent'];
-    }
-
-    $partiallyAbsentArray = array();
-    foreach ($partiallyAbsent as $key => $value) {
-
-      if ($value->action == 'Check In')
-      $action = 'Missing Check Out';
-      elseif ($value->action == 'Check Out')
-      $action = 'Missing Check In';
-
-      $partiallyAbsentArray[$key] = [$value->name, $value->email, $action];
-    }
-
-    $csv = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject);
-    $csv->insertOne(['Date',\Carbon\Carbon::parse($date)->format('d-m-Y'),'Group',$group->group_name]);
-    $csv->insertOne([]); // blank row
-    $csv->insertOne(['Name','Email','Type']);
-
-    foreach ($partiallyAbsentArray as $value) {
-      $csv->insertOne($value);
-    }
-
-    foreach ($totallyAbsentArray as $value) {
-       $csv->insertOne($value);
-     }
-
-    $csv->output('absence_sheet_'.Carbon::now()->format('dmy_his').'.csv');
-  }
-  
   }
 
     /**

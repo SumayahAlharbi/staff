@@ -48,8 +48,21 @@ class HomeController extends Controller
           }
          $user = Auth::user();
 
-         $userGroups = Group::with('user')->get()->unique();
+         foreach($groups as $group){
+         foreach ($group->user as $user){
+           $result = AttendanceSheet::select('action')
+           ->where('user_id', '=', $user->id)
+           ->where('group_id', '=', $group->id)
+           ->whereDate('created_at', '=', Carbon::now()->toDateString())
+           ->orderBy('created_at', 'desc')->first();
+           if ($result)
+           $user['lastAction'] = $result;
+           else
+           $user['lastAction'] = 'none';
+         }
+       }
+       //return $groups;
 
-         return view('dashboard',compact('user', 'groups','userGroups'));
+       return view('dashboard',compact('user', 'groups'));
     }
 }
